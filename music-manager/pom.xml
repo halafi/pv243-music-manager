@@ -77,7 +77,13 @@
     </dependencyManagement>
 
     <dependencies>
-
+    	<!-- Logback -->
+		<dependency>
+		    <groupId>ch.qos.logback</groupId>
+		    <artifactId>logback-classic</artifactId>
+		    <version>1.0.13</version>
+		</dependency>
+		
         <!-- First declare the APIs we depend on and need for compilation. All 
             of them are provided by JBoss AS 7 -->
 
