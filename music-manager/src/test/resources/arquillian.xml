@@ -14,9 +14,9 @@
 
    	<container qualifier="jboss" default="true">
      <!-- By default, arquillian will use the JBOSS_HOME environment variable. -->
-        <configuration>
+        <!--<configuration>
         	 <property name="jbossHome">/home/filip/jboss/wildfly-8.0.0.Final/</property>
-        </configuration>
+        </configuration>-->
    	</container>
 
 </arquillian>

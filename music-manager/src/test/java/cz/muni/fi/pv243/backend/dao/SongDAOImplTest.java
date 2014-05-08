@@ -1,6 +1,6 @@
 package cz.muni.fi.pv243.backend.dao;
 
-import javax.inject.Inject;
+//import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -23,7 +23,7 @@ public class SongDAOImplTest {
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     
-    @Inject
+    //@Inject
     SongDAOImpl songDAO;
 
     @Test
