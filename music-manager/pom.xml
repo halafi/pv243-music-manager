@@ -84,6 +84,13 @@
 		    <version>1.0.13</version>
 		</dependency>
 		
+		<!--Infinispan's LevelDB cache store -->
+        <dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-cachestore-leveldb</artifactId>
+			<version>6.0.2.Final</version>
+		</dependency>
+		
         <!-- First declare the APIs we depend on and need for compilation. All 
             of them are provided by JBoss AS 7 -->
 
