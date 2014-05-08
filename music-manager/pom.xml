@@ -40,6 +40,8 @@
         <!-- other plugin versions -->
         <version.surefire.plugin>2.10</version.surefire.plugin>
         <version.war.plugin>2.1.1</version.war.plugin>
+        
+        <version.hibernate.search>4.5.1.Final</version.hibernate.search>
 
         <!-- maven-compiler-plugin -->
         <maven.compiler.target>1.7</maven.compiler.target>
@@ -88,8 +90,25 @@
         <dependency>
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-cachestore-leveldb</artifactId>
-			<version>6.0.2.Final</version>
+			<version>${infinispan.version}</version>
 		</dependency>
+		
+		<!--Hibernate search -->
+		<dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-engine</artifactId>
+            <version>${version.hibernate.search}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-analyzers</artifactId>
+            <version>${version.hibernate.search}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-search-infinispan</artifactId>
+            <version>${version.hibernate.search}</version>
+        </dependency>  
 		
         <!-- First declare the APIs we depend on and need for compilation. All 
             of them are provided by JBoss AS 7 -->
