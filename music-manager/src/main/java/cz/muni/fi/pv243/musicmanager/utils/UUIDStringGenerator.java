@@ -7,15 +7,15 @@ import java.util.UUID;
  * */
 public class UUIDStringGenerator {
 	
-	static String generateCommentId(){
+	public static String generateCommentId(){
 		return UUID.randomUUID().toString();
 	}
 	
-	static String generateSongId(){
+	public static String generateSongId(){
 		return UUID.randomUUID().toString();
 	}
 	
-	static String generateIntepretId(){
+	public static String generateIntepretId(){
 		return UUID.randomUUID().toString();
 	}
 	

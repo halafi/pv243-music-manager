@@ -1,24 +1,25 @@
 package cz.muni.fi.pv243.backend.entities;
 
 import java.util.List;
-import java.util.UUID;
+
+import org.hibernate.search.annotations.Indexed;
 
 public class Song {
 	
-	private UUID id;
+	private String id;
 	private String songName;
 	private String uploaderUserName; // id of user who uploaded the song
-	private UUID interpretId; // id of song interpret
+	private String interpretId; // id of song interpret
 	private long timesPlayed;
 	private List<Comment> comments;
 	private String filePath; // reference to song file
 	
 	
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	
@@ -38,11 +39,11 @@ public class Song {
 		this.uploaderUserName = uploaderUserName;
 	}
 	
-	public UUID getInterpretId() {
+	public String getInterpretId() {
 		return interpretId;
 	}
 	
-	public void setInterpretId(UUID interpretId) {
+	public void setInterpretId(String interpretId) {
 		this.interpretId = interpretId;
 	}
 	
@@ -69,7 +70,7 @@ public class Song {
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -89,7 +90,7 @@ public class Song {
 				+ ((uploaderUserName == null) ? 0 : uploaderUserName.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -141,5 +142,5 @@ public class Song {
 				+ interpretId + ", timesPlayed=" + timesPlayed + ", comments="
 				+ comments + ", filePath=" + filePath + "]";
 	}
-
+	
 }

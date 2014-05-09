@@ -11,6 +11,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import cz.muni.fi.pv243.backend.dao.impl.SongManagerImpl;
+import cz.muni.fi.pv243.backend.entities.Song;
+import cz.muni.fi.pv243.exceptions.EntityExistsException;
 
 // http://arquillian.org/guides/getting_started/?utm_source=cta
 @RunWith(Arquillian.class)
@@ -24,10 +26,15 @@ public class SongManagerImplTest {
     }
     
     //@Inject
-    SongManagerImpl songDAO;
+    SongManagerImpl songManager;
 
     @Test
-    public void should_create_song() {
-        Assert.fail("Not yet implemented");
+    public void CreateNullSong() throws EntityExistsException {
+    	try {
+    		songManager.createSong(null);
+    	} catch (IllegalArgumentException ex) {
+    		
+    	}
+        Assert.fail("IllegalArgumentException not thrown.");
     }
 }

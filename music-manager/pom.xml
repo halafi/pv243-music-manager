@@ -110,6 +110,13 @@
 	        <version>${infinispan.version}</version>
 		</dependency>
 		
+		<!-- Infinispan CDI -->
+		<dependency>
+	        <groupId>org.infinispan</groupId>
+	        <artifactId>infinispan-cdi</artifactId>
+	        <version>${infinispan.version}</version>
+		</dependency>
+		
 		<!--Infinispan's LevelDB cache store -->
         <dependency>
 			<groupId>org.infinispan</groupId>
