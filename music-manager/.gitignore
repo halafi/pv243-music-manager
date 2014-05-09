@@ -1,3 +1,14 @@
-/target
+.project
+.metadata
+.factorypath
+.classpath
+.loadpath
+.settings/
+/home
+*target*
+*.jar
+*.war
+*.ear
+*.class
 /test-output
 /logs
