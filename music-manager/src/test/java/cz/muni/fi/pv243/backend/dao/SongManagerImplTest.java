@@ -10,21 +10,21 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cz.muni.fi.pv243.backend.dao.impl.SongDAOImpl;
+import cz.muni.fi.pv243.backend.dao.impl.SongManagerImpl;
 
 // http://arquillian.org/guides/getting_started/?utm_source=cta
 @RunWith(Arquillian.class)
-public class SongDAOImplTest {
+public class SongManagerImplTest {
 	
     @Deployment
     public static JavaArchive createDeployment() {
         return ShrinkWrap.create(JavaArchive.class)
-            .addClass(SongDAOImpl.class)
+            .addClass(SongManagerImpl.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     
     //@Inject
-    SongDAOImpl songDAO;
+    SongManagerImpl songDAO;
 
     @Test
     public void should_create_song() {
