@@ -1,7 +1,10 @@
-package cz.muni.fi.pv243.backend.entities;
+package cz.muni.fi.pv243.musicmanager.entities;
 
 import java.util.Date;
-import java.util.UUID;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.DateBridge;
@@ -9,6 +12,7 @@ import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.ProvidedId;
 import org.hibernate.search.annotations.Resolution;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Class representing comment entity.
@@ -18,16 +22,25 @@ import org.hibernate.search.annotations.Resolution;
 public class Comment {
 	
 	@Field
+	@NotNull
 	private String id;
 	
 	@Field
+	@NotNull
 	private String authorUserName;
+	
+	@Field
+	@NotNull
+	private String songId;
 	
 	@Field(analyze=Analyze.NO)
 	@DateBridge(resolution=Resolution.DAY)
+	@NotNull
 	private Date postTime;
 	
 	@Field
+	@NotBlank
+	@Size(min = 2, max = 250)
 	private String text;
 
 	public String getId() {
@@ -38,12 +51,20 @@ public class Comment {
 		this.id = id;
 	}
 
-	public String getUsername() {
+	public String getAuthorUserName() {
 		return authorUserName;
 	}
 
-	public void setUsername(String username) {
-		this.authorUserName = username;
+	public void setAuthorUserName(String authorUserName) {
+		this.authorUserName = authorUserName;
+	}
+
+	public String getSongId() {
+		return songId;
+	}
+
+	public void setSongId(String songId) {
+		this.songId = songId;
 	}
 
 	public Date getPostTime() {
@@ -74,12 +95,13 @@ public class Comment {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result
+				+ ((authorUserName == null) ? 0 : authorUserName.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
 				+ ((postTime == null) ? 0 : postTime.hashCode());
+		result = prime * result + ((songId == null) ? 0 : songId.hashCode());
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
-		result = prime * result
-				+ ((authorUserName == null) ? 0 : authorUserName.hashCode());
 		return result;
 	}
 
@@ -92,6 +114,11 @@ public class Comment {
 		if (getClass() != obj.getClass())
 			return false;
 		Comment other = (Comment) obj;
+		if (authorUserName == null) {
+			if (other.authorUserName != null)
+				return false;
+		} else if (!authorUserName.equals(other.authorUserName))
+			return false;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -102,22 +129,24 @@ public class Comment {
 				return false;
 		} else if (!postTime.equals(other.postTime))
 			return false;
+		if (songId == null) {
+			if (other.songId != null)
+				return false;
+		} else if (!songId.equals(other.songId))
+			return false;
 		if (text == null) {
 			if (other.text != null)
 				return false;
 		} else if (!text.equals(other.text))
-			return false;
-		if (authorUserName == null) {
-			if (other.authorUserName != null)
-				return false;
-		} else if (!authorUserName.equals(other.authorUserName))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", authorUserName=" + authorUserName + ", postTime="
-				+ postTime + ", text=" + text + "]";
+		return "Comment [id=" + id + ", authorUserName=" + authorUserName
+				+ ", songId=" + songId + ", postTime=" + postTime + ", text="
+				+ text + "]";
 	}
+	
 }

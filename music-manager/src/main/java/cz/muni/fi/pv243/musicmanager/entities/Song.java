@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.backend.entities;
+package cz.muni.fi.pv243.musicmanager.entities;
 
 import java.util.List;
 

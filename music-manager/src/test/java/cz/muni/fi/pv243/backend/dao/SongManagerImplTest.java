@@ -10,9 +10,9 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cz.muni.fi.pv243.backend.dao.impl.SongManagerImpl;
-import cz.muni.fi.pv243.backend.entities.Song;
-import cz.muni.fi.pv243.exceptions.EntityExistsException;
+import cz.muni.fi.pv243.musicmanager.dao.impl.SongManagerImpl;
+import cz.muni.fi.pv243.musicmanager.entities.Song;
+import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 
 // http://arquillian.org/guides/getting_started/?utm_source=cta
 @RunWith(Arquillian.class)
@@ -29,7 +29,7 @@ public class SongManagerImplTest {
     SongManagerImpl songManager;
 
     @Test
-    public void CreateNullSong() throws EntityExistsException {
+    public void CreateNullSong() throws IllegalEntityException {
     	try {
     		songManager.createSong(null);
     	} catch (IllegalArgumentException ex) {

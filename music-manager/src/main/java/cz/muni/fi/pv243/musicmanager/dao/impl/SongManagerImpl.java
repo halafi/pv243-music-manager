@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.backend.dao.impl;
+package cz.muni.fi.pv243.musicmanager.dao.impl;
 
 import java.util.List;
 
@@ -7,10 +7,10 @@ import javax.persistence.Cacheable;
 
 import org.infinispan.commons.api.BasicCache;
 
-import cz.muni.fi.pv243.backend.dao.SongManager;
-import cz.muni.fi.pv243.backend.entities.Song;
-import cz.muni.fi.pv243.exceptions.EntityExistsException;
-import cz.muni.fi.pv243.exceptions.NonExistingEntityException;
+import cz.muni.fi.pv243.musicmanager.dao.SongManager;
+import cz.muni.fi.pv243.musicmanager.entities.Song;
+import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
+import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
 
 /**
@@ -26,7 +26,7 @@ public class SongManagerImpl implements SongManager {
 
 	@Override
 	//@CachePut(cacheName="songCache")
-	public void createSong(Song song) throws EntityExistsException,
+	public void createSong(Song song) throws IllegalEntityException,
 			IllegalArgumentException {
 		if (song == null) {
 			throw new IllegalArgumentException("Song argument is null");

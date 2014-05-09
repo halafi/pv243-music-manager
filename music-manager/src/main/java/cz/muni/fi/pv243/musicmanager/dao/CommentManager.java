@@ -1,11 +1,11 @@
-package cz.muni.fi.pv243.backend.dao;
+package cz.muni.fi.pv243.musicmanager.dao;
 
 import java.util.List;
 
-import cz.muni.fi.pv243.backend.entities.Comment;
-import cz.muni.fi.pv243.backend.entities.Song;
-import cz.muni.fi.pv243.exceptions.EntityExistsException;
-import cz.muni.fi.pv243.exceptions.NonExistingEntityException;
+import cz.muni.fi.pv243.musicmanager.entities.Comment;
+import cz.muni.fi.pv243.musicmanager.entities.Song;
+import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
+import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 
 /**
  * Interface for work with {@code Comment} entity.
@@ -16,9 +16,9 @@ public interface CommentManager {
 	 * Puts new {@link Comment} to the cache store.
 	 * @param comment new comment to be added
 	 * @throws IllegalArgumentException when comment is null.
-	 * @throws EntityExistsException if comment already exists in cache store.
+	 * @throws IllegalEntityException if comment id is already set.
 	 * */
-	public void createComment(Comment comment) throws EntityExistsException, IllegalArgumentException;
+	public void createComment(Comment comment) throws IllegalEntityException, IllegalArgumentException;
 	
 	/**
 	 * Retrieves {@link Comment} by id.
@@ -39,8 +39,6 @@ public interface CommentManager {
 	/**
 	 * Remove {@link Comment} from cache store.
 	 * @param comment comment to be removed
-	 * @throws NonExistingEntityException TODO
-	 * @throws IllegalArgumentException TODO
 	 * @throws IllegalArgumentException when comment is null.
 	 * @throws NonExistingEntityException when Comment doesn't exist in cache store.
 	 * */

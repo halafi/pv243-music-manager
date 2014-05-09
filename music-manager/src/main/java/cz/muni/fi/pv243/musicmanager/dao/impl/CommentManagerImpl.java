@@ -1,20 +1,28 @@
-package cz.muni.fi.pv243.backend.dao.impl;
+package cz.muni.fi.pv243.musicmanager.dao.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
 
+import org.apache.lucene.search.Query;
+import org.hibernate.search.query.dsl.QueryBuilder;
+import org.infinispan.Cache;
 import org.infinispan.commons.CacheException;
 import org.infinispan.commons.api.BasicCache;
+import org.infinispan.query.CacheQuery;
+import org.infinispan.query.Search;
+import org.infinispan.query.SearchManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cz.muni.fi.pv243.backend.dao.CommentManager;
-import cz.muni.fi.pv243.backend.entities.Comment;
-import cz.muni.fi.pv243.exceptions.EntityExistsException;
-import cz.muni.fi.pv243.exceptions.NonExistingEntityException;
+import cz.muni.fi.pv243.musicmanager.dao.CommentManager;
+import cz.muni.fi.pv243.musicmanager.entities.Comment;
+import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
+import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
+import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
 
 /**
  * @author Radek Koubsky
@@ -32,27 +40,32 @@ public class CommentManagerImpl implements CommentManager {
 	private BasicCache<String, Object> commentCache;
 	
 	@Override
-	public void createComment(Comment comment) throws EntityExistsException,
+	public void createComment(Comment comment) throws IllegalEntityException,
 			IllegalArgumentException {
 		
 		if(comment == null){
 			throw new IllegalArgumentException("Comment is null.");
 		}
 		
-		if(comment.getId() == null){
-			throw new IllegalArgumentException("Comment id is null.");
+		if(comment.getId() != null){
+			throw new IllegalEntityException("Comment id is not null, Comment entity cannot be put into cache.");
 		}
 		commentCache = provider.getCacheContainer().getCache("commentcache");
 		
-		if(commentCache.containsKey(comment.getId())){
-			throw new EntityExistsException("Comment already exists in cache.");
-		}
+		comment.setId(UUIDStringGenerator.generateCommentId());
 		
 		try {
 			userTransaction.begin();
 			commentCache.put(comment.getId(), comment);
 			userTransaction.commit();
 		} catch (Exception e) {
+			if(userTransaction != null){
+				try {
+					userTransaction.rollback();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 			logger.error("Error while putting comment to the comment cache.", e);
 			throw new CacheException(e); 
 		} 
@@ -96,6 +109,13 @@ public class CommentManagerImpl implements CommentManager {
 			commentCache.put(comment.getId(), comment);
 			userTransaction.commit();
 		} catch (Exception e) {
+			if(userTransaction != null){
+				try {
+					userTransaction.rollback();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 			logger.error("Error while updating comment.", e);
 			throw new CacheException(e); 
 		}
@@ -123,6 +143,13 @@ public class CommentManagerImpl implements CommentManager {
 			commentCache.remove(comment.getId());
 			userTransaction.commit();
 		} catch (Exception e) {
+			if(userTransaction != null){
+				try {
+					userTransaction.rollback();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 			logger.error("Error while deleting comment.", e);
 			throw new CacheException(e); 
 		}
@@ -131,8 +158,22 @@ public class CommentManagerImpl implements CommentManager {
 
 	@Override
 	public List<Comment> getCommentsBySongId(String songId) {
-		// TODO Auto-generated method stub
-		return null;
+		ArrayList<Comment> comments = new ArrayList<Comment>();
+		commentCache = provider.getCacheContainer().getCache("commentcache");
+		SearchManager sm = Search.getSearchManager((Cache) commentCache);
+		QueryBuilder queryBuilder = sm.buildQueryBuilderForClass(Comment.class).get();
+		
+		Query q = queryBuilder.keyword().onField("songId").matching(songId).createQuery();
+		logger.debug("Lucene query: " + q);
+		
+		CacheQuery cq = sm.getQuery(q, Comment.class);
+		
+		for (Object o : cq.list()) {
+	          if (o instanceof Comment) {
+	             comments.add(((Comment) o));
+	          }
+	       }
+	       return comments;
 	}
 
 }

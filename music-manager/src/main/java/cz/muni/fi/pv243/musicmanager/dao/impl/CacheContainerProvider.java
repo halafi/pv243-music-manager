@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.backend.dao.impl;
+package cz.muni.fi.pv243.musicmanager.dao.impl;
 
 
 

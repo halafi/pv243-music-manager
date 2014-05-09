@@ -110,6 +110,12 @@
 	        <version>${infinispan.version}</version>
 		</dependency>
 		
+		<dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-query</artifactId>
+            <version>${infinispan.version}</version>
+        </dependency>
+		
 		<!-- Infinispan CDI -->
 		<dependency>
 	        <groupId>org.infinispan</groupId>

@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.exceptions;
+package cz.muni.fi.pv243.musicmanager.exceptions;
 
 public class NonExistingEntityException extends Exception{
 	private static final long serialVersionUID = 1L;

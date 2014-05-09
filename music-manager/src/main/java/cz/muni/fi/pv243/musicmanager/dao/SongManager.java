@@ -1,10 +1,10 @@
-package cz.muni.fi.pv243.backend.dao;
+package cz.muni.fi.pv243.musicmanager.dao;
 
 import java.util.List;
 
-import cz.muni.fi.pv243.backend.entities.Song;
-import cz.muni.fi.pv243.exceptions.EntityExistsException;
-import cz.muni.fi.pv243.exceptions.NonExistingEntityException;
+import cz.muni.fi.pv243.musicmanager.entities.Song;
+import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
+import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 
 /**
  * Interface for {@link Song} entity manipulation.
@@ -15,10 +15,10 @@ public interface SongManager {
 	/**
 	 * Creates a new {@link Song}.
 	 * @param song song to be added
-	 * @throws EntityExistsException if song with the song id already exist
+	 * @throws IllegalEntityException if song with the song id already exist
 	 * @throws IllegalArgumentException if song is null
 	 */
-	public void createSong(Song song) throws EntityExistsException, IllegalArgumentException;
+	public void createSong(Song song) throws IllegalEntityException, IllegalArgumentException;
 	
 	/**
 	 * Removes a given {@link Song}.
