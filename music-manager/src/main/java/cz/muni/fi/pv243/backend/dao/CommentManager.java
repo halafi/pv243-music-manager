@@ -1,7 +1,6 @@
 package cz.muni.fi.pv243.backend.dao;
 
 import java.util.List;
-import java.util.UUID;
 
 import cz.muni.fi.pv243.backend.entities.Comment;
 import cz.muni.fi.pv243.backend.entities.Song;
@@ -25,8 +24,9 @@ public interface CommentManager {
 	 * Retrieves {@link Comment} by id.
 	 * @param id id of the comment to be retrieved
 	 * @return Comment instance with specified id or null when Comment doesn't exists
+	 * @throws IllegalArgumentException when comment id is null.
 	 * */
-	public Comment getCommentById(UUID id);
+	public Comment getCommentById(String id);
 	
 	/**
 	 * Updates existing {@link Comment} in cache store.
@@ -39,15 +39,17 @@ public interface CommentManager {
 	/**
 	 * Remove {@link Comment} from cache store.
 	 * @param comment comment to be removed
+	 * @throws NonExistingEntityException TODO
+	 * @throws IllegalArgumentException TODO
 	 * @throws IllegalArgumentException when comment is null.
 	 * @throws NonExistingEntityException when Comment doesn't exist in cache store.
 	 * */
-	public void deleteComment(Comment comment);
+	public void deleteComment(Comment comment) throws NonExistingEntityException, IllegalArgumentException;
 	
 	/**
 	 * Retrieves list of all comments of {@link Song} specified by its id.
 	 * @param id id of song
 	 * @return List of comments of the song or null when song doesn't have any comment
 	 * */
-	public List<Comment> getCommentsBySongId(UUID songId);
+	public List<Comment> getCommentsBySongId(String songId);
 }

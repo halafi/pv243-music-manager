@@ -1,11 +1,14 @@
 package cz.muni.fi.pv243.backend.entities;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.UUID;
 
+import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.DateBridge;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.ProvidedId;
+import org.hibernate.search.annotations.Resolution;
 
 /**
  * Class representing comment entity.
@@ -15,45 +18,46 @@ import org.hibernate.search.annotations.ProvidedId;
 public class Comment {
 	
 	@Field
-	private UUID id;
+	private String id;
 	
 	@Field
-	private String author;
+	private String authorUserName;
 	
-	@Field
-	private Timestamp postTime;
+	@Field(analyze=Analyze.NO)
+	@DateBridge(resolution=Resolution.DAY)
+	private Date postTime;
 	
 	@Field
 	private String text;
 
-	public UUID getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(UUID id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
 	public String getUsername() {
-		return author;
+		return authorUserName;
 	}
 
 	public void setUsername(String username) {
-		this.author = username;
+		this.authorUserName = username;
 	}
 
-	public Timestamp getPostTime() {
+	public Date getPostTime() {
 		if(postTime == null){
 			return null;
 		}
-		return new Timestamp(postTime.getTime());
+		return new Date(postTime.getTime());
 	}
 
-	public void setPostTime(Timestamp postTime) {
+	public void setPostTime(Date postTime) {
 		this.postTime = null;
 		
 		if(postTime != null){
-			this.postTime = new Timestamp(postTime.getTime());
+			this.postTime = new Date(postTime.getTime());
 		}
 		
 	}
@@ -75,7 +79,7 @@ public class Comment {
 				+ ((postTime == null) ? 0 : postTime.hashCode());
 		result = prime * result + ((text == null) ? 0 : text.hashCode());
 		result = prime * result
-				+ ((author == null) ? 0 : author.hashCode());
+				+ ((authorUserName == null) ? 0 : authorUserName.hashCode());
 		return result;
 	}
 
@@ -103,17 +107,17 @@ public class Comment {
 				return false;
 		} else if (!text.equals(other.text))
 			return false;
-		if (author == null) {
-			if (other.author != null)
+		if (authorUserName == null) {
+			if (other.authorUserName != null)
 				return false;
-		} else if (!author.equals(other.author))
+		} else if (!authorUserName.equals(other.authorUserName))
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Comment [id=" + id + ", username=" + author + ", postTime="
+		return "Comment [id=" + id + ", authorUserName=" + authorUserName + ", postTime="
 				+ postTime + ", text=" + text + "]";
 	}
 }
