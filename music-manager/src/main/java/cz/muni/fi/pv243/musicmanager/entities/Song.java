@@ -2,17 +2,48 @@ package cz.muni.fi.pv243.musicmanager.entities;
 
 import java.util.List;
 
-import org.hibernate.search.annotations.Indexed;
+import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.NumericField;
+
+/**
+ * Represents a song. Song objects are stored in the cache.
+ * @author filip
+ */
+@Indexed(index="SongIndex")
+//@ProvidedId(name="id") should not be needed
 public class Song {
 	
+	@Field
+	@NotNull
 	private String id;
+	
+	@Field
+	@NotNull
 	private String songName;
-	private String uploaderUserName; // id of user who uploaded the song
-	private String interpretId; // id of song interpret
+	
+	// id of the uploader
+	@Field
+	@NotNull
+	private String uploaderUserName;
+	
+	// id of the interpret
+	@Field
+	@NotNull
+	private String interpretId; 
+	
+	@Field
+	@NumericField
 	private long timesPlayed;
+	
+	@Field
 	private List<Comment> comments;
-	private String filePath; // reference to song file
+	
+	//@Field
+	@NotNull
+	private String filePath; 
 	
 	
 	public String getId() {
@@ -66,7 +97,7 @@ public class Song {
 	public String getFilePath() {
 		return filePath;
 	}
-	
+
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
 	}

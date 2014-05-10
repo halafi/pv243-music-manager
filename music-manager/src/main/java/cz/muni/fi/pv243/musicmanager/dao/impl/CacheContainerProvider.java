@@ -27,7 +27,7 @@ public class CacheContainerProvider {
         	logger.info("Initialization of BasicCacheContainer...");
         	GlobalConfiguration glob = new GlobalConfigurationBuilder()
         	                          .nonClusteredDefault().globalJmxStatistics().enable()
-        	                          .jmxDomain("cz.muni.fi.pv243.musicmanager")  //prevent collision with non-transactional carmart
+        	                          .jmxDomain("cz.muni.fi.pv243.musicmanager")  //prevent collision with non-transactional musicmanager
         	                          .build();
         	
         	Configuration defaultConfig = new ConfigurationBuilder()

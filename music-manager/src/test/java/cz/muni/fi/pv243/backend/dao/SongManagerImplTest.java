@@ -1,6 +1,5 @@
 package cz.muni.fi.pv243.backend.dao;
 
-//import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -11,10 +10,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import cz.muni.fi.pv243.musicmanager.dao.impl.SongManagerImpl;
-import cz.muni.fi.pv243.musicmanager.entities.Song;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 
-// http://arquillian.org/guides/getting_started/?utm_source=cta
+/**
+ * Tests for the SongManagerImpl class.
+ * @author filip
+ */
 @RunWith(Arquillian.class)
 public class SongManagerImplTest {
 	
@@ -29,7 +30,7 @@ public class SongManagerImplTest {
     SongManagerImpl songManager;
 
     @Test
-    public void CreateNullSong() throws IllegalEntityException {
+    public void createNullSong() throws IllegalEntityException {
     	try {
     		songManager.createSong(null);
     	} catch (IllegalArgumentException ex) {

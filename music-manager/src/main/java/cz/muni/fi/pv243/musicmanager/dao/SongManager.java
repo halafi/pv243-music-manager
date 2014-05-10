@@ -7,7 +7,7 @@ import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 
 /**
- * Interface for {@link Song} entity manipulation.
+ * Interface for {@link Song} entity manipulation using the infinispan cache.
  * @author filip
  */
 public interface SongManager {
@@ -15,15 +15,15 @@ public interface SongManager {
 	/**
 	 * Creates a new {@link Song}.
 	 * @param song song to be added
-	 * @throws IllegalEntityException if song with the song id already exist
 	 * @throws IllegalArgumentException if song is null
+	 * @throws IllegalEntityException if the song is invalid
 	 */
 	public void createSong(Song song) throws IllegalEntityException, IllegalArgumentException;
 	
 	/**
 	 * Removes a given {@link Song}.
 	 * @param song song to be removed
-	 * @throws NonExistingEntityException if song does not exist and can not be removed
+	 * @throws NonExistingEntityException if song does not exist and cannot be removed
 	 * @throws IllegalArgumentException if song is null
 	 */
 	public void removeSong(Song song) throws NonExistingEntityException, IllegalArgumentException;
@@ -31,7 +31,7 @@ public interface SongManager {
 	/**
 	 * Retrieves a {@link Song} with the given id.
 	 * @param id id of the song to be retrieved
-	 * @return song with the given id or null when the song does not exists
+	 * @return song with the given id or null when the song does not exist
 	 * @throws IllegalArgumentException if id is null
 	 */
 	public Song getSong(String id);
@@ -56,7 +56,13 @@ public interface SongManager {
 	 */
 	public List<Song> getSongsbyInterpret(String interpretId) throws IllegalArgumentException;
 	
-	//public List<Song> getSongsByName(String songName) throws NonExistingEntityException, IllegalArgumentException;
+	/**
+	 * Retrieves a list of each {@link Song} containing the factor in the song name.
+	 * @param factor factor string to be searched for
+	 * @return list of all songs with the factor string in the song name
+	 * @throws IllegalArgumentException if factor is null or empty
+	 */
+	public List<Song> searchSongsByName(String factor) throws IllegalArgumentException;
 	
 	/**
 	 * Retrieves a list of each {@link Song} uploaded by the given user, null if there are not any songs.
