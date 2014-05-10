@@ -41,7 +41,7 @@ public class Song {
 	@Field
 	private List<Comment> comments;
 	
-	//@Field
+	@Field
 	@NotNull
 	private String filePath; 
 	

@@ -136,7 +136,7 @@ public class SongManagerImpl implements SongManager {
 	}
 
 	@Override
-	public Song getSong(String id) throws IllegalArgumentException {
+	public Song getSong(String id) throws IllegalArgumentException, CacheException {
 		if (id == null) {
 			throw new IllegalArgumentException("Id is null.");
 		}
@@ -166,21 +166,7 @@ public class SongManagerImpl implements SongManager {
 	}
 
 	@Override
-	public List<Song> getAllSongs() {
-		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
-		
-		if(songCache.isEmpty()) {
-			return null;
-		}
-		
-		// get the search manager from the cache
-		//SearchManager searchManager = Search.getSearchManager((Cache) songCache);
-		
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<Song> getTop10Songs() {
+	public List<Song> getTop10Songs() throws CacheException {
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
 		if(songCache.isEmpty()) {
@@ -204,8 +190,8 @@ public class SongManagerImpl implements SongManager {
 	}
 
 	@Override
-	public List<Song> searchSongsByName(String factor) throws IllegalArgumentException {
-		if (factor == null || factor.length() < 1) {
+	public List<Song> searchSongs(String fulltext) throws IllegalArgumentException {
+		if (fulltext == null || fulltext.length() < 1) {
 			throw new IllegalArgumentException("Search string is null or empty.");
 		}
 		
