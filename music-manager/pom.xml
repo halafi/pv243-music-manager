@@ -115,6 +115,12 @@
             <artifactId>infinispan-query</artifactId>
             <version>${infinispan.version}</version>
         </dependency>
+        
+        <dependency>
+		    <groupId>org.infinispan</groupId>
+		    <artifactId>infinispan-cdi</artifactId>
+		    <version>${infinispan.version}</version>
+		</dependency>
 		
 		<!--Infinispan's LevelDB cache store -->
         <dependency>

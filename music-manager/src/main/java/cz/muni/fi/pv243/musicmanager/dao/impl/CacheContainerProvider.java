@@ -4,6 +4,7 @@ package cz.muni.fi.pv243.musicmanager.dao.impl;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.ws.rs.Produces;
 
 import org.infinispan.commons.api.BasicCacheContainer;
 import org.infinispan.configuration.cache.Configuration;
@@ -22,6 +23,7 @@ public class CacheContainerProvider {
 
     private BasicCacheContainer manager;
 
+    @Produces
     public BasicCacheContainer getCacheContainer() {
         if (manager == null) {
         	logger.info("Initialization of BasicCacheContainer...");

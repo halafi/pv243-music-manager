@@ -11,33 +11,33 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import cz.muni.fi.pv243.musicmanager.dao.impl.SongManagerImpl;
+import cz.muni.fi.pv243.musicmanager.dao.impl.CommentManagerImpl;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 
 /**
- * Tests for the SongManagerImpl class.
- * @author filip
+ * Tests for the CommentManagerImpl class.
+ * @author Radek Koubsky
  */
 @RunWith(Arquillian.class)
-public class SongManagerImplTest {
-	
-    @Deployment
+public class CommentManagerImplTest {
+	@Deployment
     public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-            .addClass(SongManagerImpl.class)
+        return ShrinkWrap.create(JavaArchive.class, "commentManagerImplTest.jar")
+            .addClass(CommentManagerImpl.class)
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
     
     @Inject
-    SongManagerImpl songManager;
-
+	CommentManagerImpl commentManager;
+    
     @Test
-    public void createNullSong() throws IllegalEntityException {
+    public void testNullComment() throws IllegalEntityException {
     	try {
-    		songManager.createSong(null);
+    		commentManager.createComment(null);
     	} catch (IllegalArgumentException ex) {
     		
     	}
         Assert.fail("IllegalArgumentException not thrown.");
     }
+
 }
