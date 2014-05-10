@@ -3,6 +3,7 @@ package cz.muni.fi.pv243.musicmanager.dao.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
@@ -42,7 +43,7 @@ public class SongManagerImpl implements SongManager {
     private UserTransaction userTransaction;
     
 	private BasicCache<String, Song> songCache;
-
+	
 
 	@Override
 	public void createSong(Song song) throws IllegalEntityException, IllegalArgumentException, CacheException {
