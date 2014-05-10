@@ -5,8 +5,7 @@ import javax.inject.Inject;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
-import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,11 +20,12 @@ import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 @RunWith(Arquillian.class)
 public class SongManagerImplTest {
 	
+
     @Deployment
-    public static JavaArchive createDeployment() {
-        return ShrinkWrap.create(JavaArchive.class)
-            .addClass(SongManagerImpl.class)
-            .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+    public static WebArchive getDeployment() {
+        return ShrinkWrap.create(WebArchive.class)
+                //.addPackages(true, SongManagerImpl.class.getPackage()).addClass(SongManagerImpl.class)
+                .addClass(SongManagerImpl.class);
     }
     
     @Inject
@@ -33,6 +33,7 @@ public class SongManagerImplTest {
 
     @Test
     public void createNullSong() throws IllegalEntityException {
+    	
     	try {
     		songManager.createSong(null);
     	} catch (IllegalArgumentException ex) {
