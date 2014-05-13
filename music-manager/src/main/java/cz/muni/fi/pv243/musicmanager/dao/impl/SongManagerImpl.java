@@ -16,7 +16,6 @@ import org.infinispan.commons.api.BasicCache;
 import org.infinispan.query.CacheQuery;
 import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
-import org.jboss.weld.exceptions.UnsupportedOperationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
