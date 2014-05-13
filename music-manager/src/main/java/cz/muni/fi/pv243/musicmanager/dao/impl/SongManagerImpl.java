@@ -72,7 +72,7 @@ public class SongManagerImpl implements SongManager {
 			throw new IllegalEntityException("Song file is null.");
 		} else {
 			File songFile = new File(song.getFilePath());
-			if (songFile.exists()) {
+			if (!songFile.exists()) {
 				throw new IllegalEntityException("Song file does not exist.");
 			}
 			if (!songFile.isFile()) {

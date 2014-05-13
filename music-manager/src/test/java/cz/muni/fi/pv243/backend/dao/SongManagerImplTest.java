@@ -1,5 +1,8 @@
 package cz.muni.fi.pv243.backend.dao;
 
+import static org.junit.Assert.*;
+
+import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -10,8 +13,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -52,18 +53,24 @@ public class SongManagerImplTest {
     		songManager.createSong(null);
     	} catch (IllegalArgumentException ex) {
     	}
-        Assert.fail("IllegalArgumentException not thrown.");
+    	fail();
     }
     
     @Test
     @InSequence(2)
     public void createSong() {
-    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme", "c:\\mp3", null, 0);
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"neexistujicisoubor", null, 0);
     	try {
 			songManager.createSong(simpSong);
 		} catch (IllegalArgumentException | CacheException | IllegalEntityException e) {
-			Assert.fail("Failed to persist song.");
+			fail();
 		}
+    	assertNotNull(simpSong.getId());
+    	Song simpSongClone = songManager.getSong(simpSong.getId());
+    	assertEquals(simpSong, simpSongClone);
+    	assertNotSame(simpSong, simpSongClone);
+    	assertDeepEquals(simpSong, simpSongClone);
     }
     
     @Test
@@ -74,22 +81,23 @@ public class SongManagerImplTest {
 		} catch (IllegalArgumentException e) {
 			
 		}
-    	Assert.fail("IllegalArgumentException not thrown.");
+    	fail();
     }
     
     @Test
 	@InSequence(4)
     public void removeSong() {
-    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme", "c:\\mp3", null, 0);
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"/home/filip/neexistujicisoubor", null, 0);
     	try {
 			songManager.createSong(simpSong);
 		} catch (IllegalArgumentException | CacheException | IllegalEntityException e) {
-			Assert.fail("Failed to persist song.");
+			fail();
 		}
     	try {
 			songManager.removeSong(simpSong);
 		} catch (IllegalArgumentException | CacheException | NonExistingEntityException e) {
-			Assert.fail("Failed to remove song.");
+			fail();;
 		}
     }
     
@@ -108,4 +116,50 @@ public class SongManagerImplTest {
     	song.setTimesPlayed(timesPlayed);
     	return song;
     }
+    
+    /**
+     * {@link Song} deep equals.
+     */
+    private void assertDeepEquals(Song s1, Song s2) {
+    	 assertEquals(s1.getId(), s2.getId());
+    	 assertEquals(s1.getFilePath(), s2.getFilePath());
+    	 assertEquals(s1.getInterpretId(), s2.getInterpretId());
+    	 assertEquals(s1.getSongName(), s2.getSongName());
+    	 assertEquals(s1.getTimesPlayed(), s2.getTimesPlayed());
+    	 assertEquals(s1.getUploaderUserName(), s2.getUploaderUserName());
+    	 assertDeepEquals(s1.getComments(), s2.getComments()); // TBD deep equals
+    }
+    
+    /**
+     * {@link Comment} list deep equals.
+     */
+    private void assertDeepEquals(List<Comment> l1, List<Comment> l2) {
+        for (int i = 0; i < l1.size(); i++) {
+            Comment expected = l1.get(i);
+            Comment actual = l2.get(i);
+            assertDeepEquals(expected, actual);
+        }
+    }
+    
+    /**
+     * {@link Comment} deep equals.
+     */
+    private void assertDeepEquals(Comment c1, Comment c2) {
+    	assertEquals(c1.getId(), c2.getId());
+    	assertEquals(c1.getAuthorUserName(), c2.getAuthorUserName());
+    	assertEquals(c1.getPostTime(), c2.getPostTime());
+    	assertEquals(c1.getSongId(), c2.getSongId());
+    	assertEquals(c1.getText(), c2.getText());
+    	assertEquals(c1.getText(), c2.getText());
+    }
+    
+    /**
+     * {@link Song} comparator by id.
+     */
+    private static Comparator<Song> idComparator = new Comparator<Song>() {
+        @Override
+        public int compare(Song s1, Song s2) {
+            return s1.getId().compareTo(s2.getId());
+        }
+    };
 }
