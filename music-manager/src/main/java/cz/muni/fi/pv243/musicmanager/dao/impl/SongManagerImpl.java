@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
@@ -38,7 +39,7 @@ public class SongManagerImpl implements SongManager {
 	@Inject
 	private CacheContainerProvider provider;
 	
-    @Inject
+	@Resource
     private UserTransaction userTransaction;
     
 	private BasicCache<String, Song> songCache;

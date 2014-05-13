@@ -1,20 +1,24 @@
 package cz.muni.fi.pv243.backend.dao;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
+import org.infinispan.commons.CacheException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ArchivePaths;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import cz.muni.fi.pv243.musicmanager.dao.SongManager;
 import cz.muni.fi.pv243.musicmanager.dao.impl.CacheContainerProvider;
 import cz.muni.fi.pv243.musicmanager.dao.impl.SongManagerImpl;
+import cz.muni.fi.pv243.musicmanager.entities.Comment;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
@@ -29,23 +33,79 @@ public class SongManagerImplTest {
     @Deployment
     public static WebArchive getDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
-                .addClasses(SongManagerImpl.class, SongManager.class, Song.class,
-                		CacheContainerProvider.class, IllegalEntityException.class,
-                		NonExistingEntityException.class);
-                //.addAsManifestResource(EmptyAsset.INSTANCE, ArchivePaths.create("beans.xml"));
+                .addClasses(SongManagerImpl.class, SongManager.class) // Song Manager
+                .addClass(CacheContainerProvider.class) // Infinispan configuration
+                .addClass(Song.class) // Entities
+                .addPackage("cz.muni.fi.pv243.musicmanager.exceptions")
+                .addPackage("org.infinispan.commons")
+                .addPackage("org.infinispan.commons.api");
     }
     
     @Inject
     SongManagerImpl songManager;
-
+    
+    
     @Test
-    public void createNullSong() throws IllegalEntityException {
-    	
+    @InSequence(1)
+    public void createSong_onNull() throws CacheException, IllegalEntityException {
     	try {
     		songManager.createSong(null);
     	} catch (IllegalArgumentException ex) {
-    		
     	}
         Assert.fail("IllegalArgumentException not thrown.");
+    }
+    
+    @Test
+    @InSequence(2)
+    public void createSong() {
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme", "c:\\mp3", null, 0);
+    	try {
+			songManager.createSong(simpSong);
+		} catch (IllegalArgumentException | CacheException | IllegalEntityException e) {
+			Assert.fail("Failed to persist song.");
+		}
+    }
+    
+    @Test
+    @InSequence(3)
+    public void removeSong_onNull() throws CacheException, NonExistingEntityException {
+    	try {
+			songManager.removeSong(null);
+		} catch (IllegalArgumentException e) {
+			
+		}
+    	Assert.fail("IllegalArgumentException not thrown.");
+    }
+    
+    @Test
+	@InSequence(4)
+    public void removeSong() {
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme", "c:\\mp3", null, 0);
+    	try {
+			songManager.createSong(simpSong);
+		} catch (IllegalArgumentException | CacheException | IllegalEntityException e) {
+			Assert.fail("Failed to persist song.");
+		}
+    	try {
+			songManager.removeSong(simpSong);
+		} catch (IllegalArgumentException | CacheException | NonExistingEntityException e) {
+			Assert.fail("Failed to remove song.");
+		}
+    }
+    
+    /**
+     * Simple {@link Song} constructor.
+     */
+    public static Song newSong(String id, String interpretId, String uploaderIdUserName,
+    		String songName, String filePath, List<Comment> comments, long timesPlayed) {
+    	Song song = new Song();
+    	song.setId(id);
+    	song.setInterpretId(interpretId);
+    	song.setUploaderUserName(uploaderIdUserName);
+    	song.setSongName(songName);
+    	song.setFilePath(filePath);
+    	song.setComments(comments);
+    	song.setTimesPlayed(timesPlayed);
+    	return song;
     }
 }
