@@ -1,8 +1,8 @@
 package cz.muni.fi.pv243.musicmanager.entities;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -19,8 +19,9 @@ import org.hibernate.validator.constraints.NotBlank;
  * */
 @Indexed(index="CommentIndex")
 @ProvidedId
-public class Comment {
-	
+public class Comment implements Serializable{
+	private static final long serialVersionUID = 3131025143284228441L;
+
 	@Field
 	@NotNull
 	private String id;

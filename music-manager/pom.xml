@@ -29,6 +29,7 @@
 
 		<version.infinispan>6.0.2.Final</version.infinispan>
 		<version.arquillian>1.1.4.Final</version.arquillian>
+		<version.shrinkwrap.resolvers>2.1.0</version.shrinkwrap.resolvers>
 		<version.junit>4.11</version.junit>
 		<version.logback>1.1.2</version.logback>
 		<version.hibernate.search>4.5.1.Final</version.hibernate.search>
@@ -51,6 +52,13 @@
 				<scope>import</scope>
 			</dependency>
 			<dependency>
+		      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+		      <artifactId>shrinkwrap-resolver-depchain</artifactId>
+		      <version>${version.shrinkwrap.resolvers}</version>
+		      <scope>test</scope>
+		      <type>pom</type>
+		    </dependency>
+			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
 				<version>${version.arquillian}</version>
@@ -62,6 +70,36 @@
 
 
 	<dependencies>
+		<dependency>
+	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+	      <artifactId>shrinkwrap-resolver-api</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+	      <artifactId>shrinkwrap-resolver-spi</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+	      <artifactId>shrinkwrap-resolver-api-maven</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+	      <artifactId>shrinkwrap-resolver-spi-maven</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+	      <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    <dependency>
+	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+	      <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+	      <scope>test</scope>
+	    </dependency>
 
 		<!-- Hibernate search -->
 		<dependency>

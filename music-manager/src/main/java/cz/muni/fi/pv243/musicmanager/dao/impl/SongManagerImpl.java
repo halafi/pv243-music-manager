@@ -110,6 +110,42 @@ public class SongManagerImpl implements SongManager {
 	}
 
 	@Override
+	public void updateSong(Song song) throws NonExistingEntityException,
+			IllegalArgumentException {
+		if(song == null){
+			throw new IllegalArgumentException("Song is null.");
+		}
+		
+		if(song.getId() == null){
+			throw new IllegalArgumentException("Song id is null.");
+		}
+		
+		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
+		
+		if(!songCache.containsKey(song.getId())){
+			throw new NonExistingEntityException("Song does not exist in cache.");
+		}
+		
+		try {
+			userTransaction.begin();
+			songCache.put(song.getId(), song);
+			userTransaction.commit();
+			logger.info("Comment with id: " + song.getId() + " was updated in cache store.");
+		} catch (Exception e) {
+			if(userTransaction != null){
+				try {
+					userTransaction.rollback();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+			logger.error("Error while updating song.", e);
+			throw new CacheException(e); 
+		}
+		
+	}
+	
+	@Override
 	public void removeSong(Song song) throws NonExistingEntityException, IllegalArgumentException, CacheException {
 		if (song == null) {
 			throw new IllegalArgumentException("Song is null.");

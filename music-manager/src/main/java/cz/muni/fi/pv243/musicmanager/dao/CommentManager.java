@@ -2,8 +2,6 @@ package cz.muni.fi.pv243.musicmanager.dao;
 
 import java.util.List;
 
-import javax.ejb.Local;
-
 import cz.muni.fi.pv243.musicmanager.entities.Comment;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
@@ -12,7 +10,6 @@ import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 /**
  * Interface for work with {@code Comment} entity.
  * */
-@Local
 public interface CommentManager {
 	
 	/**

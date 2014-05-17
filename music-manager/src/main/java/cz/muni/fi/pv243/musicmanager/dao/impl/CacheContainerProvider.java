@@ -7,13 +7,18 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Produces;
 
 import org.infinispan.commons.api.BasicCacheContainer;
+import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
+import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
 import org.infinispan.persistence.leveldb.configuration.LevelDBStoreConfigurationBuilder;
+import org.infinispan.transaction.LockingMode;
 import org.infinispan.transaction.TransactionMode;
+import org.infinispan.transaction.lookup.GenericTransactionManagerLookup;
+import org.infinispan.util.concurrent.IsolationLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,10 +41,16 @@ public class CacheContainerProvider {
         	               .transaction().transactionMode(TransactionMode.TRANSACTIONAL)
         	               .build();  //default config
         	
-        	Configuration musicCacheConfig = new ConfigurationBuilder().persistence()
-        									.addStore(LevelDBStoreConfigurationBuilder.class)
+        	Configuration musicCacheConfig = new ConfigurationBuilder().jmxStatistics().enable()
+	       	          						.clustering().cacheMode(CacheMode.LOCAL)
+	       	          						.transaction().transactionMode(TransactionMode.TRANSACTIONAL).autoCommit(false)
+	       	          						.lockingMode(LockingMode.OPTIMISTIC).transactionManagerLookup(new GenericTransactionManagerLookup())
+	       	          						.locking().isolationLevel(IsolationLevel.REPEATABLE_READ)
+	       	          						.persistence().addStore(LevelDBStoreConfigurationBuilder.class)
         									.location("C:\\leveldb\\data")
-        									.expiredLocation("C:\\leveldb\\expired")
+        									.expiredLocation("C:\\leveldb\\expired").expiryQueueSize(10).purgeOnStartup(true)
+        									.eviction().strategy(EvictionStrategy.LIRS).maxEntries(100)
+        									.indexing().enable().addProperty("default.directory_provider", "ram")
         									.build();
         	
         	manager = new DefaultCacheManager(glob, defaultConfig);

@@ -1,21 +1,27 @@
 package cz.muni.fi.pv243.musicmanager.entities;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.NumericField;
+import org.hibernate.search.annotations.ProvidedId;
 
 /**
  * Represents a song. Song objects are stored in the cache.
  * @author filip
  */
 @Indexed(index="SongIndex")
-//@ProvidedId(name="id") should not be needed
-public class Song {
-	
+@ProvidedId(name="id")
+public class Song implements Serializable{
+	private static final long serialVersionUID = -2151151851212789905L;
+
 	@Field
 	@NotNull
 	private String id;
@@ -39,6 +45,7 @@ public class Song {
 	private long timesPlayed;
 	
 	@Field
+	@IndexedEmbedded
 	private List<Comment> comments;
 	
 	@Field
@@ -87,11 +94,19 @@ public class Song {
 	}
 	
 	public List<Comment> getComments() {
-		return comments;
+		if(comments == null){
+			return null; 
+		}
+		return Collections.unmodifiableList(this.comments);
 	}
 	
 	public void setComments(List<Comment> comments) {
-		this.comments = comments;
+		this.comments = null;
+		
+		if(comments != null){
+			this.comments = new ArrayList<Comment>();
+			this.comments.addAll(comments);
+		}
 	}
 	
 	public String getFilePath() {

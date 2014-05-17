@@ -24,6 +24,14 @@ public interface SongManager {
 	public void createSong(Song song) throws IllegalEntityException, IllegalArgumentException, CacheException;
 	
 	/**
+	 * Updates existing {@link Song} in cache store.
+	 * @param song song to be updated
+	 * @throws IllegalArgumentException when song is null.
+	 * @throws NonExistingEntityException when Song doesn't exist in cache store.
+	 * */
+	public void updateSong(Song song) throws NonExistingEntityException, IllegalArgumentException;
+	
+	/**
 	 * Removes a given {@link Song}.
 	 * @param song song to be removed
 	 * @throws NonExistingEntityException if song does not exist and cannot be removed

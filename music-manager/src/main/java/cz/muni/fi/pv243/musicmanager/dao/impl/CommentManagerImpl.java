@@ -28,6 +28,7 @@ import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
  * @author Radek Koubsky
  * */
 @Stateless
+@javax.ejb.TransactionManagement(javax.ejb.TransactionManagementType.BEAN)
 public class CommentManagerImpl implements CommentManager {
 	static final Logger logger = LoggerFactory.getLogger(CommentManagerImpl.class);
 	
@@ -41,7 +42,7 @@ public class CommentManagerImpl implements CommentManager {
 	
 	@Override
 	public void createComment(Comment comment) throws IllegalEntityException,
-			IllegalArgumentException {
+			IllegalArgumentException, CacheException {
 		
 		if(comment == null){
 			throw new IllegalArgumentException("Comment is null.");
@@ -51,13 +52,13 @@ public class CommentManagerImpl implements CommentManager {
 			throw new IllegalEntityException("Comment id is not null, Comment entity cannot be put into cache.");
 		}
 		commentCache = provider.getCacheContainer().getCache("commentcache");
-		
 		comment.setId(UUIDStringGenerator.generateCommentId());
 		
 		try {
 			userTransaction.begin();
 			commentCache.put(comment.getId(), comment);
 			userTransaction.commit();
+			logger.info("Comment with id: " + comment.getId() + " was inserted to cache store.");
 		} catch (Exception e) {
 			if(userTransaction != null){
 				try {
@@ -108,6 +109,7 @@ public class CommentManagerImpl implements CommentManager {
 			userTransaction.begin();
 			commentCache.put(comment.getId(), comment);
 			userTransaction.commit();
+			logger.info("Comment with id: " + comment.getId() + " was updated in cache store.");
 		} catch (Exception e) {
 			if(userTransaction != null){
 				try {
@@ -119,7 +121,6 @@ public class CommentManagerImpl implements CommentManager {
 			logger.error("Error while updating comment.", e);
 			throw new CacheException(e); 
 		}
-
 	}
 
 	@Override
@@ -142,6 +143,7 @@ public class CommentManagerImpl implements CommentManager {
 			userTransaction.begin();
 			commentCache.remove(comment.getId());
 			userTransaction.commit();
+			logger.info("Comment was deleted from cache store.");
 		} catch (Exception e) {
 			if(userTransaction != null){
 				try {
@@ -158,9 +160,12 @@ public class CommentManagerImpl implements CommentManager {
 
 	@Override
 	public List<Comment> getCommentsBySongId(String songId) {
+		if(songId == null){
+			throw new IllegalArgumentException("Song id is null.");
+		}
 		ArrayList<Comment> comments = new ArrayList<Comment>();
 		commentCache = provider.getCacheContainer().getCache("commentcache");
-		SearchManager sm = Search.getSearchManager((Cache) commentCache);
+		SearchManager sm = Search.getSearchManager((Cache<String, Object>) commentCache);
 		QueryBuilder queryBuilder = sm.buildQueryBuilderForClass(Comment.class).get();
 		
 		Query q = queryBuilder.keyword().onField("songId").matching(songId).createQuery();
