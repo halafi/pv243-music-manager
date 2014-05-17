@@ -25,10 +25,7 @@
 
 		<!-- JBoss dependency versions -->
 		<version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
-
-		<!-- Define the version of the JBoss BOMs we want to import to specify 
-			tested stacks. -->
-		<!-- <version.jboss.bom>1.0.7.Final</version.jboss.bom> -->
+		<version.wildfly>8.0.0.Final</version.wildfly>
 
 		<version.infinispan>6.0.2.Final</version.infinispan>
 		<version.arquillian>1.1.4.Final</version.arquillian>
@@ -36,27 +33,16 @@
 		<version.logback>1.1.2</version.logback>
 		<version.hibernate.search>4.5.1.Final</version.hibernate.search>
 
-		<version.wildfly>8.0.0.Final</version.wildfly>
-
 		<version.surefire.plugin>2.9</version.surefire.plugin>
 		<version.war.plugin>2.4</version.war.plugin>
 
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
-
 	</properties>
 
 
 	<dependencyManagement>
 		<dependencies>
-			<!-- JBoss distributes a complete set of Java EE 6 APIs including a Bill 
-				of Materials (BOM). A BOM specifies the versions of a "stack" (or a collection) 
-				of artifacts. We use this here so that we always get the correct versions 
-				of artifacts. Here we use the jboss-javaee-6.0-with-tools stack (you can 
-				read this as the JBoss stack of the Java EE 6 APIs, with some extras tools 
-				for your project, such as Arquillian for testing) and the jboss-javaee-6.0-with-hibernate 
-				stack you can read this as the JBoss stack of the Java EE 6 APIs, with extras 
-				from the Hibernate family of projects) -->
 			<dependency>
 				<groupId>org.jboss.spec</groupId>
 				<artifactId>jboss-javaee-all-7.0</artifactId>
@@ -73,6 +59,7 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
 
 	<dependencies>
 
@@ -105,12 +92,6 @@
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
 			<version>${version.infinispan}</version>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.infinispan</groupId>
-		    <artifactId>infinispan-cdi</artifactId>
-		    <version>${version.infinispan}</version>
 		</dependency>
 
 		<dependency>
@@ -251,7 +232,6 @@
 			</build>
 		</profile>
 
-
 		<!-- Arquillian testing profile that executes tests in your JBoss AS instance -->
 		<!-- This profile will start a new JBoss AS instance, and execute the test, 
 			shutting it down when done -->
@@ -272,14 +252,6 @@
 				</dependency>
 			</dependencies>
 		</profile>
-
-
-		<!-- An optional Arquillian testing profile that executes tests in a remote 
-			JBoss AS instance -->
-		<!-- Run with: mvn clean test -Parq-jbossas-remote <profile> <id>arq-jbossas-remote</id> 
-			<dependencies> <dependency> <groupId>org.jboss.as</groupId> <artifactId>jboss-as-arquillian-container-remote</artifactId> 
-			<scope>test</scope> </dependency> </dependencies> </profile> -->
-
 
 		<!-- When built in OpenShift the 'openshift' profile will be used when 
 			invoking mvn. -->
