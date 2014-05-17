@@ -6,15 +6,19 @@ import java.util.Comparator;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.transaction.UserTransaction;
 
+import org.infinispan.Cache;
 import org.infinispan.commons.CacheException;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.dao.SongManager;
 import cz.muni.fi.pv243.musicmanager.dao.impl.CacheContainerProvider;
@@ -31,29 +35,31 @@ import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 @RunWith(Arquillian.class)
 public class SongManagerImplTest {
 	
+    
     @Deployment
     public static WebArchive getDeployment() {
         return ShrinkWrap.create(WebArchive.class, "test.war")
-                .addClasses(SongManagerImpl.class, SongManager.class) // Song Manager
-                .addClass(CacheContainerProvider.class) // Infinispan configuration
-                .addClass(Song.class) // Entities
-                .addPackage("cz.muni.fi.pv243.musicmanager.exceptions")
-                .addPackage("org.infinispan.commons")
-                .addPackage("org.infinispan.commons.api");
+                .addClasses(UserTransaction.class, Logger.class, Cache.class)
+                .addPackages(true, "cz.muni.fi.pv243.musicmanager", "org.infinispan.commons", "org.inifinispan.query");
     }
     
     @Inject
-    SongManagerImpl songManager;
+    SongManager songManager;
     
     
     @Test
     @InSequence(1)
     public void createSong_onNull() throws CacheException, IllegalEntityException {
+    	Song song = null;
     	try {
-    		songManager.createSong(null);
-    	} catch (IllegalArgumentException ex) {
+    		songManager.createSong(song);
+    	} catch (javax.ejb.EJBException ex) {
+    		if (ex.getCausedByException() instanceof IllegalArgumentException) {
+                //OK ;
+            } else {
+                fail("Wrong type of exception thrown.");
+            }
     	}
-    	fail();
     }
     
     @Test

@@ -6,7 +6,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.TransactionManagement;
+import javax.enterprise.context.Dependent;
+import javax.enterprise.inject.Model;
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.naming.InitialContext;
 import javax.transaction.UserTransaction;
 
 import org.apache.lucene.search.Query;
@@ -31,15 +36,17 @@ import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
  * @author filip
  */
 @Stateless
+@javax.ejb.TransactionManagement(javax.ejb.TransactionManagementType.BEAN)
 public class SongManagerImpl implements SongManager {
 	
 	public static final String SONG_CACHE_NAME = "songcache";
+	
 	private static final Logger logger = LoggerFactory.getLogger(SongManagerImpl.class);
 	
 	@Inject
 	private CacheContainerProvider provider;
 	
-	@Resource
+	@Inject
     private UserTransaction userTransaction;
     
 	private BasicCache<String, Song> songCache;
@@ -53,7 +60,7 @@ public class SongManagerImpl implements SongManager {
 		if (song.getId() != null) {
 			throw new IllegalEntityException("Song id is already assigned (not null).");
 		}
-		if (song.getComments() != null) {
+		/*if (song.getComments() != null) {
 			throw new IllegalEntityException("Song that does not exist cannot have comments.");
 		}
 		if (song.getInterpretId() == null) {
@@ -78,7 +85,7 @@ public class SongManagerImpl implements SongManager {
 			if (!songFile.isFile()) {
 				throw new IllegalEntityException("Song file is either a directory or not a valid file.");
 			}
-		}
+		}*/
 		
 		song.setId(UUIDStringGenerator.generateSongId());
 		
