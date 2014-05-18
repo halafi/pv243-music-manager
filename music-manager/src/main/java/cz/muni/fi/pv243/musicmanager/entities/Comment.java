@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import javax.validation.constraints.Size;
 
 import org.hibernate.search.annotations.Analyze;
@@ -23,7 +24,6 @@ public class Comment implements Serializable{
 	private static final long serialVersionUID = 3131025143284228441L;
 
 	@Field
-	@NotNull
 	private String id;
 	
 	@Field
@@ -41,7 +41,7 @@ public class Comment implements Serializable{
 	
 	@Field
 	@NotBlank
-	@Size(min = 2, max = 250)
+	@Size(min = 1, max = 250)
 	private String text;
 
 	public String getId() {

@@ -30,7 +30,8 @@ import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
 @Stateless
 @javax.ejb.TransactionManagement(javax.ejb.TransactionManagementType.BEAN)
 public class CommentManagerImpl implements CommentManager {
-	static final Logger logger = LoggerFactory.getLogger(CommentManagerImpl.class);
+	@Inject
+	private Logger logger;
 	
 	@Inject
 	private CacheContainerProvider provider;
