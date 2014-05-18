@@ -10,13 +10,14 @@ import javax.inject.Inject;
 import javax.transaction.UserTransaction;
 
 import org.apache.lucene.search.Query;
-import org.hibernate.search.query.dsl.QueryBuilder;
 import org.infinispan.Cache;
 import org.infinispan.commons.CacheException;
 import org.infinispan.commons.api.BasicCache;
 import org.infinispan.query.CacheQuery;
 import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
+import org.infinispan.query.dsl.QueryFactory;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -171,18 +172,60 @@ public class SongManagerImpl implements SongManager {
             throw new CacheException(e);
         }
 	}
-
+	
 	@Override
-	public List<Song> getTop10Songs() throws CacheException {
-		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
-		
+	public List<Song> getAllSongs() throws CacheException {
 		if(songCache.isEmpty()) {
 			return null;
 		}
 		
-		SearchManager searchManager = Search.getSearchManager((Cache) songCache);
+		List<Song> songs = new ArrayList<Song>();
 		
-		throw new UnsupportedOperationException();
+		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
+		
+		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
+		
+		Query q = sm.buildQueryBuilderForClass(Song.class).get()
+				.all().createQuery();
+
+		logger.debug("Lucene query: " + q);
+		
+		CacheQuery cq = sm.getQuery(q, Song.class);
+				
+		for (Object o : cq.list()) {
+			if (o instanceof Song) {
+				songs.add(((Song) o));
+				}
+			}
+		
+		return songs;
+	}
+
+	@Override
+	public List<Song> getTop10Songs() throws CacheException {
+		if(songCache.isEmpty()) {
+			return null;
+		}
+		
+		List<Song> songs = new ArrayList<Song>();
+		
+		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
+		
+		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
+		
+		Query q = sm.buildQueryBuilderForClass(Song.class).get().all().createQuery();
+				//.keyword().onField("timesPlayed").matching("0L").createQuery();
+		logger.debug("Lucene query: " + q);
+		
+		CacheQuery cq = sm.getQuery(q, Song.class);
+				
+		for (Object o : cq.list()) {
+			if (o instanceof Song) {
+				songs.add(((Song) o));
+				}
+			}
+		
+		return songs;
 	}
 
 	@Override
@@ -191,9 +234,25 @@ public class SongManagerImpl implements SongManager {
 			throw new IllegalArgumentException("Interpret id is null.");
 		}
 		
+		List<Song> songs = new ArrayList<Song>();
+		
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
-		throw new UnsupportedOperationException();
+		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
+		
+		Query q = sm.buildQueryBuilderForClass(Song.class).get()
+				.keyword().onField("interpretId").matching(interpretId).createQuery();
+		logger.debug("Lucene query: " + q);
+		
+		CacheQuery cq = sm.getQuery(q, Song.class);
+		
+		for (Object o : cq.list()) {
+			if (o instanceof Song) {
+				songs.add(((Song) o));
+				}
+			}
+		
+		return songs;
 	}
 
 	@Override
@@ -202,44 +261,76 @@ public class SongManagerImpl implements SongManager {
 			throw new IllegalArgumentException("Search string is null or empty.");
 		}
 		
+		List<Song> songs = new ArrayList<Song>();
+		
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
-		throw new UnsupportedOperationException();
+		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
+		
+		QueryFactory qf = sm.getQueryFactory();
+		
+		Query q = sm.buildQueryBuilderForClass(Song.class).get()
+				.keyword().onField("songName").matching(fulltext).createQuery(); // keyword search
+
+		logger.debug("Lucene query: " + q);
+		
+		CacheQuery cq = sm.getQuery(q, Song.class);
+		
+		for (Object o : cq.list()) {
+			if (o instanceof Song) {
+				songs.add(((Song) o));
+				}
+			}
+		
+		return songs;
 	}
 	
 	@Override
 	public List<Song> getUserSongs(String userName) throws IllegalArgumentException {
 		if (userName == null) {
-			throw new IllegalArgumentException("UserName is null.");
+			throw new IllegalArgumentException("UserName id is null.");
 		}
-		
-		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
 		List<Song> songs = new ArrayList<Song>();
 		
-		SearchManager searchManager = Search.getSearchManager((Cache) songCache);
+		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
-		QueryBuilder queryBuilder = searchManager.buildQueryBuilderForClass(Song.class).get();
+		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
 		
-		Query query = queryBuilder.keyword().onField("uploaderUserName").matching(userName).createQuery();
+		Query q = sm.buildQueryBuilderForClass(Song.class).get()
+				.keyword().onField("uploaderUserName").matching(userName).createQuery();
+		logger.debug("Lucene query: " + q);
 		
-		logger.debug("Lucene query: " + query);
+		CacheQuery cq = sm.getQuery(q, Song.class);
 		
-		CacheQuery cacheQuery = searchManager.getQuery(query, Song.class);
+		for (Object o : cq.list()) {
+			if (o instanceof Song) {
+				songs.add(((Song) o));
+				}
+			}
 		
-		for (Object o : cacheQuery.list()) {
-	          if (o instanceof Song) {
-	             songs.add(((Song) o));
-	          }
-	       }
-		
-	    return songs;
+		return songs;
 	}
 	
 	@Override
 	public void removeAllSongs() {
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
-		songCache.clear();
+		try {
+			userTransaction.begin();
+			songCache.clear();
+			userTransaction.commit();
+		} catch (Exception e) {
+            if (userTransaction != null) {
+                try {
+                	userTransaction.rollback();
+                } catch (Exception ex) {
+                	logger.error("Transaction rollback error.", ex);
+                }
+            }
+            logger.error("Error while trying to clear song cache.", e);
+            throw new CacheException(e);
+        }
+		
 	}
 	
 }

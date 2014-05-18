@@ -3,6 +3,7 @@ package cz.muni.fi.pv243.backend.dao;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -29,13 +30,12 @@ import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
 
 /**
- * Tests for the SongManagerImpl class.
+ * Tests for the SongManagerImpl class. Tests are not independent.
  * @author filip
  */
 @RunWith(Arquillian.class)
 public class SongManagerImplTest {
 	
-    
     @Deployment
     public static WebArchive getDeployment() {
     	return ShrinkWrap.create(MavenImporter.class, "music-manager-test.war")
@@ -47,12 +47,12 @@ public class SongManagerImplTest {
     SongManager songManager;
     
     @Before
-    public void setUpTest() {
+    public void setUp() {
     	songManager.removeAllSongs();
     }
     
     @After
-    public void clean() {
+    public void tearDown() {
     	songManager.removeAllSongs();
     }
     
@@ -96,7 +96,7 @@ public class SongManagerImplTest {
     }
     
     @Test
-	@InSequence(2)
+    @InSequence(2)
     public void updateSongTest() {
     	// test update null
     	try {
@@ -126,7 +126,7 @@ public class SongManagerImplTest {
     	simpSong.setId(UUIDStringGenerator.generateSongId());
     	try {
     		songManager.updateSong(simpSong);
-    		Assert.fail("Wrong type of exception thrown.");
+    		Assert.fail("Exception not thrown.");
     	} catch (NonExistingEntityException ex) {
     		// OK
     	} catch (Exception ex) {
@@ -155,11 +155,12 @@ public class SongManagerImplTest {
     }
     
     @Test
-	@InSequence(3)
+    @InSequence(3)
     public void removeSongTest() {
     	// test remove null
     	try {
 			songManager.removeSong(null);
+			Assert.fail("Exception not thrown.");
 		} catch (EJBException ex) {
     		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
                 Assert.fail("Wrong type of exception thrown.");
@@ -204,33 +205,281 @@ public class SongManagerImplTest {
     }
     
     @Test
-	@InSequence(4)
+    @InSequence(4)
     public void getSongTest() {
-    	
+    	// get with null id
+    	try {
+			Song song = songManager.getSong(null);
+			Assert.fail("Exception not thrown.");
+    	} catch (EJBException ex) {
+    		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
+                Assert.fail("Wrong type of exception thrown.");
+            }
+    	} catch (Exception ex) {
+			Assert.fail("Wrong type of exception thrown.");
+		}
+    	// create and get
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song swSong = newSong(null, "Various Artists", "Yoda (Dark Side)", "Star Wars Theme",
+    			"/star-wars-theme.mp3", new ArrayList<Comment>(), 0);
+    	try {
+    		songManager.createSong(simpSong);
+    		songManager.createSong(swSong);
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to create song.");
+    	}
+    	assertDeepEquals(songManager.getSong(simpSong.getId()), simpSong);
+    	assertDeepEquals(songManager.getSong(swSong.getId()), swSong);
     }
     
     @Test
-	@InSequence(5)
+    @InSequence(5)
+    public void getAllSongsTest() {
+    	// create and get
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song swSong = newSong(null, "Various Artists", "Yoda (Dark Side)", "Star Wars Theme",
+    			"/star-wars-theme.mp3", new ArrayList<Comment>(), 0);
+    	try {
+    		songManager.createSong(simpSong);
+    		songManager.createSong(swSong);
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to create song.");
+    	}
+    	List<Song> expected = new ArrayList<Song>();
+    	expected.add(simpSong);
+    	expected.add(swSong);
+    	Collections.sort(expected, idComparator);
+    	//try {
+    		List<Song> actual = songManager.getAllSongs();
+    		if (actual.size() != 2) {
+    			Assert.fail("Array size does not match.");
+    		}
+    		Collections.sort(actual, idComparator);
+    		for (int i = 0; i < actual.size(); i++) {
+    			assertEquals(actual.get(i), expected.get(i));
+    		}
+    	//} catch (Exception ex) {
+    	//	Assert.fail("Failed to get all (2) songs.");
+    	//}
+    }
+    
+    @Test
+    @InSequence(6)
     public void getTop10SongsTest() {
-    	
+    	// get songs form an empty cache
+    	try {
+    		List<Song> songs = songManager.getTop10Songs();
+    		Assert.fail("Exception not thrown.");
+    	} catch(EJBException ex) {
+    		if (!(ex.getCausedByException() instanceof NullPointerException)) {
+                Assert.fail("Wrong type of exception thrown.");
+            }//Assert.fail("Failed to get top 10 songs from an empty cache.");
+    	} catch (Exception ex) {
+    		Assert.fail("Wrong type of exception thrown.");
+    	}
+    	// create and get songs
+    	Song s0 = newSong(null, "Interpret", "User", "Song0", "/0.mp3",
+    			new ArrayList<Comment>(), 2L);
+    	Song s1 = newSong(null, "Interpret", "User", "Song1", "/1.mp3",
+    			new ArrayList<Comment>(), 4L);
+    	Song s2 = newSong(null, "Interpret", "User", "Song2", "/2.mp3",
+    			new ArrayList<Comment>(), 8L);
+    	Song s3 = newSong(null, "Interpret", "User", "Song3", "/3.mp3",
+    			new ArrayList<Comment>(), 16L);
+    	Song s4 = newSong(null, "Interpret", "User", "Song4", "/4.mp3",
+    			new ArrayList<Comment>(), 32L);
+    	Song s5 = newSong(null, "Interpret", "User", "Song5", "/5.mp3",
+    			new ArrayList<Comment>(), 64L);
+    	Song s6 = newSong(null, "Interpret", "User", "Song6", "/6.mp3",
+    			new ArrayList<Comment>(), 128L);
+    	Song s7 = newSong(null, "Interpret", "User", "Song7", "/7.mp3",
+    			new ArrayList<Comment>(), 256L);
+    	Song s8 = newSong(null, "Interpret", "User", "Song8", "/8.mp3",
+    			new ArrayList<Comment>(), 512L);
+    	Song s9 = newSong(null, "Interpret", "User", "Song9", "/9.mp3",
+    			new ArrayList<Comment>(), 1024L);
+    	Song s10 = newSong(null, "Interpret", "User", "Song10", "/10.mp3",
+    			new ArrayList<Comment>(), 2048L);
+    	try {
+    		songManager.createSong(s0);
+    		songManager.createSong(s1); songManager.createSong(s2);
+    		songManager.createSong(s3); songManager.createSong(s4);
+    		songManager.createSong(s5); songManager.createSong(s6);
+    		songManager.createSong(s7); songManager.createSong(s8); 
+    		songManager.createSong(s9); songManager.createSong(s10);
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to create song.");
+    	}
+    	List<Song> expected = new ArrayList<Song>();
+    	expected.add(s1); expected.add(s2); expected.add(s3); expected.add(s4);
+    	expected.add(s5); expected.add(s6); expected.add(s7); expected.add(s8);
+    	expected.add(s9); expected.add(s10);
+    	Collections.sort(expected, idComparator);
+    	try {
+    		List<Song> actual = songManager.getTop10Songs();
+    		if (actual.size() != 10) {
+    			Assert.fail("Array size does not match.");
+    		}
+    		Collections.sort(actual, idComparator);
+    		for (int i = 0; i < actual.size(); i++) {
+    			assertEquals(actual.get(i), expected.get(i));
+    		}
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to get top 10 songs.");
+    	}
     }
     
     @Test
-	@InSequence(6)
+    @InSequence(7)
     public void getSongsbyInterpretTest() {
-    	
+    	// get songs by null interpret
+    	try {
+    		List<Song> songs = songManager.getSongsbyInterpret(null);
+    		Assert.fail("Exception not thrown.");
+    	} catch(EJBException ex) {
+    		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
+                Assert.fail("Wrong type of exception thrown.");
+            }
+    	} catch (Exception ex) {
+			Assert.fail("Wrong type of exception thrown.");
+		}
+    	// get songs by interpret "Various Artists"
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song swSong = newSong(null, "Various Artists", "Yoda", "Star Wars Theme",
+    			"/star-wars-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song inSong = newSong(null, "We don't want you here", "Homer", "Intruder",
+    			"/my-precious.mp3", new ArrayList<Comment>(), 0);
+    	try {
+    		songManager.createSong(simpSong);
+    		songManager.createSong(swSong);
+    		songManager.createSong(inSong);
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to create song.");
+    	}
+    	List<Song> expected = new ArrayList<Song>();
+    	expected.add(simpSong);
+    	expected.add(swSong);
+    	Collections.sort(expected, idComparator);
+    	try {
+    		List<Song> actual = songManager.getSongsbyInterpret("Various Artists");
+    		if (actual.size() != 3 && actual.size() != expected.size()) {
+    			Assert.fail("Array size does not match.");
+    		}
+    		Collections.sort(actual, idComparator);
+    		for (int i = 0; i < actual.size(); i++) {
+    			assertEquals(actual.get(i), expected.get(i));
+    		}
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to get songs by interpret.");
+    	}
+    	// get songs by interpret "We don't want you here"
+    	expected = new ArrayList<Song>();
+    	expected.add(inSong);
+    	try {
+    		List<Song> actual = songManager.getSongsbyInterpret("We don't want you here");
+    		if (actual.size() != 1 && actual.size() != expected.size()) {
+    			Assert.fail("Array size does not match." + actual.size());
+    		}
+    		assertEquals(actual.get(0), expected.get(0));
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to get songs by interpret.");
+    	}
     }
     
     @Test
-	@InSequence(7)
+    @InSequence(8)
     public void searchSongsTest() {
+    	// search null fulltext
+    	try {
+    		List<Song> songs = songManager.searchSongs(null);
+    		Assert.fail("Exception not thrown.");
+    	} catch(EJBException ex) {
+    		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
+                Assert.fail("Wrong type of exception thrown.");
+            }
+    	} catch (Exception ex) {
+			Assert.fail("Wrong type of exception thrown.");
+		}
+    	// search for "Theme"
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song swSong = newSong(null, "Various Artists", "Yoda", "Star Wars Theme",
+    			"/star-wars-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song inSong = newSong(null, "We don't want you here", "Homer", "Intruder",
+    			"/my-precious.mp3", new ArrayList<Comment>(), 0);
+    	try {
+    		songManager.createSong(simpSong);
+    		songManager.createSong(swSong);
+    		songManager.createSong(inSong);
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to create song.");
+    	}
+    	List<Song> expected = new ArrayList<Song>();
+    	expected.add(simpSong);
+    	expected.add(swSong);
+    	Collections.sort(expected, idComparator);
+    	try {
+    		List<Song> actual = songManager.searchSongs("Theme");
+    		if (actual.size() != 2 || actual.size() != expected.size()) {
+    			Assert.fail("Array size does not match. Actual: " + actual.size() +", Expected: " +expected.size());
+    		}
+    		Collections.sort(actual, idComparator);
+    		for (int i = 0; i < actual.size(); i++) {
+    			assertEquals(actual.get(i), expected.get(i));
+    		}
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to get songs by userName.");
+    	}
     	
     }
     
     @Test
-	@InSequence(8)
+    @InSequence(9)
     public void getUserSongsTest() {
-    	
+    	// get songs by null username
+    	try {
+    		List<Song> songs = songManager.getUserSongs(null);
+    		Assert.fail("Exception not thrown.");
+    	} catch(EJBException ex) {
+    		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
+                Assert.fail("Wrong type of exception thrown.");
+            }
+    	} catch (Exception ex) {
+			Assert.fail("Wrong type of exception thrown.");
+		}
+    	// get "Homer" songs
+    	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
+    			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song swSong = newSong(null, "Various Artists", "Yoda", "Star Wars Theme",
+    			"/star-wars-theme.mp3", new ArrayList<Comment>(), 0);
+    	Song inSong = newSong(null, "We don't want you here", "Homer", "Intruder",
+    			"/my-precious.mp3", new ArrayList<Comment>(), 0);
+    	try {
+    		songManager.createSong(simpSong);
+    		songManager.createSong(swSong);
+    		songManager.createSong(inSong);
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to create song.");
+    	}
+    	List<Song> expected = new ArrayList<Song>();
+    	expected.add(simpSong);
+    	expected.add(inSong);
+    	Collections.sort(expected, idComparator);
+    	try {
+    		List<Song> actual = songManager.getUserSongs("Homer");
+    		if (actual.size() != 2) {
+    			Assert.fail("Array size does not match.");
+    		}
+    		Collections.sort(actual, idComparator);
+    		for (int i = 0; i < actual.size(); i++) {
+    			assertEquals(actual.get(i), expected.get(i));
+    		}
+    	} catch (Exception ex) {
+    		Assert.fail("Failed to get songs by userName.");
+    	}
     }
     
     /**
@@ -249,7 +498,7 @@ public class SongManagerImplTest {
     	return song;
     }
     
-    /**
+     /**
      * {@link Song} deep equals.
      */
     private void assertDeepEquals(Song s1, Song s2) {

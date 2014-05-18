@@ -50,6 +50,13 @@ public interface SongManager {
 	public Song getSong(String id) throws IllegalArgumentException, CacheException; 
 	
 	/**
+	 * Retrieves every {@link Song} fromt he cache.
+	 * @return list of every song
+	 * @throws CacheException on infinispan cache operation error
+	 */
+	public List<Song> getAllSongs() throws CacheException;
+	
+	/**
 	 * Retrieves a list of each {@link Song} that is in the top 10 most played (determined by timesPlayed), null if there are not any songs.
 	 * @return list of top 10 songs most played or null
 	 */
