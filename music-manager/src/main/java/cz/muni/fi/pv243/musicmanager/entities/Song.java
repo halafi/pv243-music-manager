@@ -20,6 +20,7 @@ import org.hibernate.search.annotations.ProvidedId;
 @Indexed(index="SongIndex")
 @ProvidedId(name="id")
 public class Song implements Serializable{
+
 	private static final long serialVersionUID = -2151151851212789905L;
 
 	@Field
@@ -42,10 +43,12 @@ public class Song implements Serializable{
 	
 	@Field
 	@NumericField
+	@NotNull
 	private long timesPlayed;
 	
 	@Field
 	@IndexedEmbedded
+	@NotNull
 	private List<Comment> comments;
 	
 	@Field
@@ -122,8 +125,6 @@ public class Song implements Serializable{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((comments == null) ? 0 : comments.hashCode());
-		result = prime * result
 				+ ((filePath == null) ? 0 : filePath.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result
@@ -146,11 +147,6 @@ public class Song implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		Song other = (Song) obj;
-		if (comments == null) {
-			if (other.comments != null)
-				return false;
-		} else if (!comments.equals(other.comments))
-			return false;
 		if (filePath == null) {
 			if (other.filePath != null)
 				return false;
@@ -188,5 +184,4 @@ public class Song implements Serializable{
 				+ interpretId + ", timesPlayed=" + timesPlayed + ", comments="
 				+ comments + ", filePath=" + filePath + "]";
 	}
-	
 }

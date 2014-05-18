@@ -1,17 +1,12 @@
 package cz.muni.fi.pv243.musicmanager.dao.impl;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
-import javax.enterprise.context.Dependent;
-import javax.enterprise.inject.Model;
+import javax.ejb.TransactionManagementType;
 import javax.inject.Inject;
-import javax.inject.Named;
-import javax.naming.InitialContext;
 import javax.transaction.UserTransaction;
 
 import org.apache.lucene.search.Query;
@@ -36,11 +31,10 @@ import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
  * @author filip
  */
 @Stateless
-@javax.ejb.TransactionManagement(javax.ejb.TransactionManagementType.BEAN)
+@TransactionManagement(TransactionManagementType.BEAN)
 public class SongManagerImpl implements SongManager {
 	
 	public static final String SONG_CACHE_NAME = "songcache";
-	
 	private static final Logger logger = LoggerFactory.getLogger(SongManagerImpl.class);
 	
 	@Inject
@@ -51,7 +45,7 @@ public class SongManagerImpl implements SongManager {
     
 	private BasicCache<String, Song> songCache;
 	
-
+	
 	@Override
 	public void createSong(Song song) throws IllegalEntityException, IllegalArgumentException, CacheException {
 		if (song == null) {
@@ -60,32 +54,6 @@ public class SongManagerImpl implements SongManager {
 		if (song.getId() != null) {
 			throw new IllegalEntityException("Song id is already assigned (not null).");
 		}
-		/*if (song.getComments() != null) {
-			throw new IllegalEntityException("Song that does not exist cannot have comments.");
-		}
-		if (song.getInterpretId() == null) {
-			throw new IllegalEntityException("Song interpret is null.");
-		}
-		if (song.getSongName() == null || song.getSongName() == "" || song.getSongName().length() < 1) {
-			throw new IllegalEntityException("Song name is null or empty");
-		}
-		if (song.getTimesPlayed() != 0L) {
-			throw new IllegalEntityException("Song was already played, yet it does not exist.");
-		}
-		if (song.getUploaderUserName() != null) {
-			throw new IllegalEntityException("Song has no uploader userName set.");
-		}
-		if (song.getFilePath() == null) {
-			throw new IllegalEntityException("Song file is null.");
-		} else {
-			File songFile = new File(song.getFilePath());
-			if (!songFile.exists()) {
-				throw new IllegalEntityException("Song file does not exist.");
-			}
-			if (!songFile.isFile()) {
-				throw new IllegalEntityException("Song file is either a directory or not a valid file.");
-			}
-		}*/
 		
 		song.setId(UUIDStringGenerator.generateSongId());
 		
@@ -95,7 +63,7 @@ public class SongManagerImpl implements SongManager {
 			songCache.put(song.getId(), song);
 			userTransaction.commit();
 			logger.info("Song \""+song.getSongName()+"\" was put to the cache.");
-		} catch (Exception trEx) {
+		} catch (Exception e) {
 			if(userTransaction != null){
 				try {
 					userTransaction.rollback();
@@ -103,19 +71,16 @@ public class SongManagerImpl implements SongManager {
 					logger.error("Transaction rollback error.", rbEx);
 				}
 			}
-			logger.error("Error while trying to put song \""+song.getSongName()+"\" to the cache.", trEx);
-			throw new CacheException(trEx); 
+			logger.error("Error while trying to put song with name: " + song.getSongName() + " to the cache.", e);
+			throw new CacheException(e); 
 		}
-		// TBD move File
 	}
 
 	@Override
-	public void updateSong(Song song) throws NonExistingEntityException,
-			IllegalArgumentException {
+	public void updateSong(Song song) throws NonExistingEntityException, IllegalArgumentException {
 		if(song == null){
 			throw new IllegalArgumentException("Song is null.");
 		}
-		
 		if(song.getId() == null){
 			throw new IllegalArgumentException("Song id is null.");
 		}
@@ -130,19 +95,18 @@ public class SongManagerImpl implements SongManager {
 			userTransaction.begin();
 			songCache.put(song.getId(), song);
 			userTransaction.commit();
-			logger.info("Comment with id: " + song.getId() + " was updated in cache store.");
+			logger.info("Song with id: " + song.getId() + " was updated in cache store.");
 		} catch (Exception e) {
 			if(userTransaction != null){
 				try {
 					userTransaction.rollback();
-				} catch (Exception e1) {
-					e1.printStackTrace();
+				} catch (Exception ex) {
+					logger.error("Transaction rollback error.", ex);
 				}
 			}
 			logger.error("Error while updating song.", e);
 			throw new CacheException(e); 
 		}
-		
 	}
 	
 	@Override
@@ -164,19 +128,18 @@ public class SongManagerImpl implements SongManager {
 			userTransaction.begin();
             songCache.remove(song.getId());
             userTransaction.commit();
-            logger.info("Song \""+song.getSongName()+"\" was removed from the cache.");
-        } catch (Exception trEx) {
+            logger.info("Song with id: " + song.getId() + " was removed from the cache.");
+        } catch (Exception e) {
             if (userTransaction != null) {
                 try {
                 	userTransaction.rollback();
-                } catch (Exception rbEx) {
-                	logger.error("Transaction rollback error.", rbEx);
+                } catch (Exception ex) {
+                	logger.error("Transaction rollback error.", ex);
                 }
             }
-            logger.error("Error while trying to remove song \""+song.getSongName()+"\" from the cache.", trEx);
-            throw new CacheException(trEx);
+            logger.error("Error while trying to remove with id: " + song.getId() + " from the cache.", e);
+            throw new CacheException(e);
         }
-        // TBD Delete song file
 	}
 
 	@Override
@@ -196,16 +159,16 @@ public class SongManagerImpl implements SongManager {
             Song song = songCache.get(id);
             userTransaction.commit();
             return song;
-        } catch (Exception trEx) {
+        } catch (Exception e) {
             if (userTransaction != null) {
                 try {
                 	userTransaction.rollback();
-                } catch (Exception rbEx) {
-                	logger.error("Transaction rollback error.", rbEx);
+                } catch (Exception ex) {
+                	logger.error("Transaction rollback error.", ex);
                 }
             }
-            logger.error("Error while trying to retrieve song with id \""+id+"\" from the cache.", trEx);
-            throw new CacheException(trEx);
+            logger.error("Error while trying to retrieve song with id: " + id + " from the cache.", e);
+            throw new CacheException(e);
         }
 	}
 
@@ -271,6 +234,12 @@ public class SongManagerImpl implements SongManager {
 	       }
 		
 	    return songs;
+	}
+	
+	@Override
+	public void removeAllSongs() {
+		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
+		songCache.clear();
 	}
 	
 }

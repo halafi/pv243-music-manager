@@ -79,4 +79,8 @@ public interface SongManager {
 	 */
 	public List<Song> getUserSongs(String userName) throws IllegalArgumentException, CacheException;
 	
+	/**
+	 * Removes all {@link Song} entities from the cache.
+	 */
+	public void removeAllSongs();
 }

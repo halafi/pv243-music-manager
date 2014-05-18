@@ -2,6 +2,8 @@ package cz.muni.fi.pv243.musicmanager.dao.impl;
 
 
 
+import java.io.File;
+
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
 import javax.ws.rs.Produces;
@@ -47,8 +49,8 @@ public class CacheContainerProvider {
 	       	          						.lockingMode(LockingMode.OPTIMISTIC).transactionManagerLookup(new GenericTransactionManagerLookup())
 	       	          						.locking().isolationLevel(IsolationLevel.REPEATABLE_READ)
 	       	          						.persistence().addStore(LevelDBStoreConfigurationBuilder.class)
-        									.location("C:\\leveldb\\data")
-        									.expiredLocation("C:\\leveldb\\expired").expiryQueueSize(10).purgeOnStartup(true)
+	       	          						.location(System.getProperty("user.home") + File.separator + "levelDB" + File.separator + "data")
+	       	          						.expiredLocation(System.getProperty("user.home") + File.separator + "levelDB" + File.separator + "expired").expiryQueueSize(10).purgeOnStartup(true)
         									.eviction().strategy(EvictionStrategy.LIRS).maxEntries(100)
         									.indexing().enable().addProperty("default.directory_provider", "ram")
         									.build();
