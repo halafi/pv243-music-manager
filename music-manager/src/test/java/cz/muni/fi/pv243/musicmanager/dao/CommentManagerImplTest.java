@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.backend.dao;
+package cz.muni.fi.pv243.musicmanager.dao;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

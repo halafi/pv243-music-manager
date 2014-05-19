@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.annotations.Field;
@@ -19,12 +20,12 @@ import org.hibernate.search.annotations.ProvidedId;
  */
 @Indexed(index="SongIndex")
 @ProvidedId(name="id")
+@Named
 public class Song implements Serializable{
 
 	private static final long serialVersionUID = -2151151851212789905L;
 
 	@Field
-	@NotNull
 	private String id;
 	
 	@Field

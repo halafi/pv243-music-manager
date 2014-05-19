@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.backend.dao;
+package cz.muni.fi.pv243.musicmanager.dao;
 
 import static org.junit.Assert.*;
 
@@ -236,6 +236,15 @@ public class SongManagerImplTest {
     @Test
     @InSequence(5)
     public void getAllSongsTest() {
+    	// get songs form an empty cache
+    	//try {
+    		List<Song> songs = songManager.getAllSongs();
+    		if (songs.size() != 0) {
+    			Assert.fail("Array size is not 0.");
+    		}
+    	/*} catch (Exception ex) {
+    		Assert.fail("Exception thrown.");
+    	}*/
     	// create and get
     	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
     			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
@@ -260,9 +269,9 @@ public class SongManagerImplTest {
     		for (int i = 0; i < actual.size(); i++) {
     			assertEquals(actual.get(i), expected.get(i));
     		}
-    	//} catch (Exception ex) {
-    	//	Assert.fail("Failed to get all (2) songs.");
-    	//}
+    	/*} catch (Exception ex) {
+    		Assert.fail("Failed to get all (2) songs.");
+    	}*/
     }
     
     @Test
@@ -271,13 +280,11 @@ public class SongManagerImplTest {
     	// get songs form an empty cache
     	try {
     		List<Song> songs = songManager.getTop10Songs();
-    		Assert.fail("Exception not thrown.");
-    	} catch(EJBException ex) {
-    		if (!(ex.getCausedByException() instanceof NullPointerException)) {
-                Assert.fail("Wrong type of exception thrown.");
-            }//Assert.fail("Failed to get top 10 songs from an empty cache.");
+    		if (songs.size() != 0) {
+    			Assert.fail("Array size is not 0.");
+    		}
     	} catch (Exception ex) {
-    		Assert.fail("Wrong type of exception thrown.");
+    		Assert.fail("Exception thrown.");
     	}
     	// create and get songs
     	Song s0 = newSong(null, "Interpret", "User", "Song0", "/0.mp3",
@@ -320,7 +327,7 @@ public class SongManagerImplTest {
     	try {
     		List<Song> actual = songManager.getTop10Songs();
     		if (actual.size() != 10) {
-    			Assert.fail("Array size does not match.");
+    			Assert.fail("Array size does not match 10, is "+actual.size());
     		}
     		Collections.sort(actual, idComparator);
     		for (int i = 0; i < actual.size(); i++) {
@@ -403,6 +410,15 @@ public class SongManagerImplTest {
     	} catch (Exception ex) {
 			Assert.fail("Wrong type of exception thrown.");
 		}
+    	// search empty cache
+    	//try {
+    		List<Song> songs = songManager.searchSongs("Theme");
+    		if (songs.size() != 0) {
+    			Assert.fail("Array size is not 0.");
+    		}
+    	/*} catch (Exception ex) {
+    		Assert.fail("Exception thrown.");
+    	}*/
     	// search for "Theme"
     	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
     			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);

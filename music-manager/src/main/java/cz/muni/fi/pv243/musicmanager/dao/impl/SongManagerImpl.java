@@ -16,8 +16,6 @@ import org.infinispan.commons.api.BasicCache;
 import org.infinispan.query.CacheQuery;
 import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
-import org.infinispan.query.dsl.QueryFactory;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -174,25 +172,19 @@ public class SongManagerImpl implements SongManager {
 	}
 	
 	@Override
-	public List<Song> getAllSongs() throws CacheException {
-		if(songCache.isEmpty()) {
-			return null;
-		}
-		
+	public List<Song> getAllSongs() throws CacheException {	
 		List<Song> songs = new ArrayList<Song>();
 		
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
 		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
 		
-		Query q = sm.buildQueryBuilderForClass(Song.class).get()
-				.all().createQuery();
-
-		logger.debug("Lucene query: " + q);
+		org.infinispan.query.dsl.Query q = sm.getQueryFactory().from(Song.class)
+				.having("songName").like("%").toBuilder().build();
 		
-		CacheQuery cq = sm.getQuery(q, Song.class);
-				
-		for (Object o : cq.list()) {
+		//logger.debug("DSL query: " + q);
+		
+		for (Object o : q.list()) {
 			if (o instanceof Song) {
 				songs.add(((Song) o));
 				}
@@ -203,27 +195,7 @@ public class SongManagerImpl implements SongManager {
 
 	@Override
 	public List<Song> getTop10Songs() throws CacheException {
-		if(songCache.isEmpty()) {
-			return null;
-		}
-		
 		List<Song> songs = new ArrayList<Song>();
-		
-		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
-		
-		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
-		
-		Query q = sm.buildQueryBuilderForClass(Song.class).get().all().createQuery();
-				//.keyword().onField("timesPlayed").matching("0L").createQuery();
-		logger.debug("Lucene query: " + q);
-		
-		CacheQuery cq = sm.getQuery(q, Song.class);
-				
-		for (Object o : cq.list()) {
-			if (o instanceof Song) {
-				songs.add(((Song) o));
-				}
-			}
 		
 		return songs;
 	}
@@ -239,6 +211,7 @@ public class SongManagerImpl implements SongManager {
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
 		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
+		
 		
 		Query q = sm.buildQueryBuilderForClass(Song.class).get()
 				.keyword().onField("interpretId").matching(interpretId).createQuery();
@@ -267,9 +240,8 @@ public class SongManagerImpl implements SongManager {
 		
 		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
 		
-		QueryFactory qf = sm.getQueryFactory();
-		
-		Query q = sm.buildQueryBuilderForClass(Song.class).get()
+		/* KEYWORD SEARCH - WORKING
+		/*Query q = sm.buildQueryBuilderForClass(Song.class).get()
 				.keyword().onField("songName").matching(fulltext).createQuery(); // keyword search
 
 		logger.debug("Lucene query: " + q);
@@ -282,7 +254,13 @@ public class SongManagerImpl implements SongManager {
 				}
 			}
 		
-		return songs;
+		return songs;*/
+		
+		// FULLTEXT SEARCH - NOT WORKING
+		org.infinispan.query.dsl.Query q = sm.getQueryFactory().from(Song.class)
+				.having("songName").like("%"+fulltext+"%").toBuilder().build();
+
+		return q.list();
 	}
 	
 	@Override
