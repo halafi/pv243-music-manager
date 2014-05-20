@@ -237,14 +237,14 @@ public class SongManagerImplTest {
     @InSequence(5)
     public void getAllSongsTest() {
     	// get songs form an empty cache
-    	//try {
+    	try {
     		List<Song> songs = songManager.getAllSongs();
     		if (songs.size() != 0) {
     			Assert.fail("Array size is not 0.");
     		}
-    	/*} catch (Exception ex) {
+    	} catch (Exception ex) {
     		Assert.fail("Exception thrown.");
-    	}*/
+    	}
     	// create and get
     	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
     			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
@@ -260,7 +260,7 @@ public class SongManagerImplTest {
     	expected.add(simpSong);
     	expected.add(swSong);
     	Collections.sort(expected, idComparator);
-    	//try {
+    	try {
     		List<Song> actual = songManager.getAllSongs();
     		if (actual.size() != 2) {
     			Assert.fail("Array size does not match.");
@@ -269,9 +269,9 @@ public class SongManagerImplTest {
     		for (int i = 0; i < actual.size(); i++) {
     			assertEquals(actual.get(i), expected.get(i));
     		}
-    	/*} catch (Exception ex) {
+    	} catch (Exception ex) {
     		Assert.fail("Failed to get all (2) songs.");
-    	}*/
+    	}
     }
     
     @Test
@@ -323,13 +323,12 @@ public class SongManagerImplTest {
     	expected.add(s1); expected.add(s2); expected.add(s3); expected.add(s4);
     	expected.add(s5); expected.add(s6); expected.add(s7); expected.add(s8);
     	expected.add(s9); expected.add(s10);
-    	Collections.sort(expected, idComparator);
+    	Collections.sort(expected, timesPlayedComparator);
     	try {
     		List<Song> actual = songManager.getTop10Songs();
     		if (actual.size() != 10) {
     			Assert.fail("Array size does not match 10, is "+actual.size());
     		}
-    		Collections.sort(actual, idComparator);
     		for (int i = 0; i < actual.size(); i++) {
     			assertEquals(actual.get(i), expected.get(i));
     		}
@@ -411,14 +410,14 @@ public class SongManagerImplTest {
 			Assert.fail("Wrong type of exception thrown.");
 		}
     	// search empty cache
-    	//try {
+    	try {
     		List<Song> songs = songManager.searchSongs("Theme");
     		if (songs.size() != 0) {
     			Assert.fail("Array size is not 0.");
     		}
-    	/*} catch (Exception ex) {
+    	} catch (Exception ex) {
     		Assert.fail("Exception thrown.");
-    	}*/
+    	}
     	// search for "Theme"
     	Song simpSong = newSong(null, "Various Artists", "Homer", "The Simpsons Theme",
     			"/simpson-theme.mp3", new ArrayList<Comment>(), 0);
@@ -557,6 +556,20 @@ public class SongManagerImplTest {
         @Override
         public int compare(Song s1, Song s2) {
             return s1.getId().compareTo(s2.getId());
+        }
+    };
+    
+    /**
+     * {@link Song} comparator by timesPlayed.
+     */
+    private static Comparator<Song> timesPlayedComparator = new Comparator<Song>() {
+        @Override
+        public int compare(Song s1, Song s2) {
+            return compare(s1.getTimesPlayed(), s2.getTimesPlayed());
+        }
+        
+        public int compare(Long o1, Long o2) {
+            return o1==null?Integer.MAX_VALUE:o2==null?Integer.MIN_VALUE:o2.compareTo(o1);
         }
     };
 }

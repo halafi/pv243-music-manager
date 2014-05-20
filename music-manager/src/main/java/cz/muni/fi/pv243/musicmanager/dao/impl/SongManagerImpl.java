@@ -1,6 +1,8 @@
 package cz.muni.fi.pv243.musicmanager.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -17,7 +19,6 @@ import org.infinispan.query.CacheQuery;
 import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import cz.muni.fi.pv243.musicmanager.dao.SongManager;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
@@ -33,14 +34,16 @@ import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
 @TransactionManagement(TransactionManagementType.BEAN)
 public class SongManagerImpl implements SongManager {
 	
-	public static final String SONG_CACHE_NAME = "songcache";
-	private static final Logger logger = LoggerFactory.getLogger(SongManagerImpl.class);
+	@Inject
+	private Logger logger;
 	
 	@Inject
 	private CacheContainerProvider provider;
 	
 	@Inject
     private UserTransaction userTransaction;
+	
+	public static final String SONG_CACHE_NAME = "songcache";
     
 	private BasicCache<String, Song> songCache;
 	
@@ -180,9 +183,9 @@ public class SongManagerImpl implements SongManager {
 		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
 		
 		org.infinispan.query.dsl.Query q = sm.getQueryFactory().from(Song.class)
-				.having("songName").like("%").toBuilder().build();
+				.having("filePath").like("%%").toBuilder().build();
 		
-		//logger.debug("DSL query: " + q);
+		logger.debug("DSL query: " + q);
 		
 		for (Object o : q.list()) {
 			if (o instanceof Song) {
@@ -195,8 +198,11 @@ public class SongManagerImpl implements SongManager {
 
 	@Override
 	public List<Song> getTop10Songs() throws CacheException {
-		List<Song> songs = new ArrayList<Song>();
-		
+		List<Song> songs = getAllSongs();
+		Collections.sort(songs, timesPlayedComparator);
+		if(songs.size() > 10) {
+			return songs.subList(0, 10);
+		}
 		return songs;
 	}
 
@@ -240,23 +246,6 @@ public class SongManagerImpl implements SongManager {
 		
 		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
 		
-		/* KEYWORD SEARCH - WORKING
-		/*Query q = sm.buildQueryBuilderForClass(Song.class).get()
-				.keyword().onField("songName").matching(fulltext).createQuery(); // keyword search
-
-		logger.debug("Lucene query: " + q);
-		
-		CacheQuery cq = sm.getQuery(q, Song.class);
-		
-		for (Object o : cq.list()) {
-			if (o instanceof Song) {
-				songs.add(((Song) o));
-				}
-			}
-		
-		return songs;*/
-		
-		// FULLTEXT SEARCH - NOT WORKING
 		org.infinispan.query.dsl.Query q = sm.getQueryFactory().from(Song.class)
 				.having("songName").like("%"+fulltext+"%").toBuilder().build();
 
@@ -310,5 +299,19 @@ public class SongManagerImpl implements SongManager {
         }
 		
 	}
+	
+    /**
+     * {@link Song} comparator by timesPlayed.
+     */
+    private static Comparator<Song> timesPlayedComparator = new Comparator<Song>() {
+        @Override
+        public int compare(Song s1, Song s2) {
+            return compare(s1.getTimesPlayed(), s2.getTimesPlayed());
+        }
+        
+        public int compare(Long o1, Long o2) {
+            return o1==null?Integer.MAX_VALUE:o2==null?Integer.MIN_VALUE:o2.compareTo(o1);
+        }
+    };
 	
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import javax.inject.Named;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -28,31 +29,31 @@ public class Song implements Serializable{
 	@Field
 	private String id;
 	
-	@Field
+	@Field(analyze=Analyze.NO)
 	@NotNull
 	private String songName;
 	
 	// id of the uploader
-	@Field
+	@Field(analyze=Analyze.NO)
 	@NotNull
 	private String uploaderUserName;
 	
 	// id of the interpret
-	@Field
+	@Field(analyze=Analyze.NO)
 	@NotNull
 	private String interpretId; 
 	
-	@Field
+	@Field(analyze=Analyze.NO)
 	@NumericField
 	@NotNull
 	private long timesPlayed;
 	
-	@Field
+	@Field(analyze=Analyze.NO)
 	@IndexedEmbedded
 	@NotNull
 	private List<Comment> comments;
 	
-	@Field
+	@Field(analyze=Analyze.NO)
 	@NotNull
 	private String filePath; 
 	

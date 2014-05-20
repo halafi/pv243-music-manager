@@ -27,7 +27,7 @@
 		<version.jboss.maven.plugin>7.4.Final</version.jboss.maven.plugin>
 		<version.wildfly>8.0.0.Final</version.wildfly>
 
-		<version.infinispan>6.0.2.Final</version.infinispan>
+		<version.infinispan>7.0.0.Alpha4</version.infinispan>
 		<version.arquillian>1.1.4.Final</version.arquillian>
 		<version.shrinkwrap.resolvers>2.1.0</version.shrinkwrap.resolvers>
 		<version.junit>4.11</version.junit>
@@ -107,11 +107,7 @@
 			<artifactId>hibernate-search-engine</artifactId>
 			<version>${version.hibernate.search}</version>
 		</dependency>
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-search-analyzers</artifactId>
-			<version>${version.hibernate.search}</version>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-infinispan</artifactId>
@@ -202,8 +198,11 @@
 
 		<!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
 			typesafe criteria queries -->
-		<!--<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-jpamodelgen</artifactId> 
-			<scope>provided</scope> </dependency> -->
+		<!--<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId> 
+			<version>4.3.5.Final</version>
+		</dependency>-->
 
 		<!-- Annotation processor that raising compilation errors whenever constraint 
 			annotations are incorrectly used. -->

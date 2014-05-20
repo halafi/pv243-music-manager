@@ -3,7 +3,7 @@ package cz.muni.fi.pv243.musicmanager.dao;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
 
-import org.infinispan.api.BasicCache;
+
 import org.infinispan.commons.api.BasicCacheContainer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
