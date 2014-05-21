@@ -93,7 +93,7 @@ public class CommentServiceImpl implements CommentService {
 	
 	/**
 	 * Validates the given {@link Comment}
-	 * @param member Member to be validated
+	 * @param comment Comment to be validated
      * @throws ConstraintViolationException If Bean Validation errors exist
 	 * */
 	private void validateComment(Comment comment) throws ConstraintViolationException {

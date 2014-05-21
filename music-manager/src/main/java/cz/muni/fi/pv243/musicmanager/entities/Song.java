@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import javax.inject.Named;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
@@ -14,6 +16,7 @@ import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.NumericField;
 import org.hibernate.search.annotations.ProvidedId;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * Represents a song. Song objects are stored in the cache.
@@ -21,7 +24,6 @@ import org.hibernate.search.annotations.ProvidedId;
  */
 @Indexed(index="SongIndex")
 @ProvidedId(name="id")
-@Named
 public class Song implements Serializable{
 
 	private static final long serialVersionUID = -2151151851212789905L;
@@ -30,31 +32,32 @@ public class Song implements Serializable{
 	private String id;
 	
 	@Field(analyze=Analyze.NO)
-	@NotNull
+	@NotBlank
+	@Size(max = 255)
 	private String songName;
 	
-	// id of the uploader
 	@Field(analyze=Analyze.NO)
-	@NotNull
+	@NotBlank
 	private String uploaderUserName;
 	
-	// id of the interpret
 	@Field(analyze=Analyze.NO)
-	@NotNull
+	@NotBlank
 	private String interpretId; 
 	
 	@Field(analyze=Analyze.NO)
-	@NumericField
 	@NotNull
+	@NumericField
+	@Min(value=0)
 	private long timesPlayed;
 	
 	@Field(analyze=Analyze.NO)
 	@IndexedEmbedded
 	@NotNull
+	@Valid
 	private List<Comment> comments;
 	
 	@Field(analyze=Analyze.NO)
-	@NotNull
+	@NotBlank
 	private String filePath; 
 	
 	

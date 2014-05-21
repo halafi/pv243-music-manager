@@ -44,7 +44,7 @@ public class SongManagerImplTest {
     }
     
     @Inject
-    SongManager songManager;
+    private SongManager songManager;
     
     @Before
     public void setUp() {
