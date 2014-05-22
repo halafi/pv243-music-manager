@@ -3,6 +3,8 @@ package cz.muni.fi.pv243.musicmanager.entities;
 import java.io.Serializable;
 
 import javax.validation.constraints.NotNull;
+
+import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.ProvidedId;
@@ -22,12 +24,12 @@ public class Interpret implements Serializable {
 		POP, ROCK, METAL, PUNK, CLASSIC
 	}
 	@Field
-	@NotNull
 	private String id;
 	
-	@Field
+	@Field (analyze=Analyze.NO)
 	@NotNull
 	@NotBlank
+	
 	private String name;
 	
 	@Field

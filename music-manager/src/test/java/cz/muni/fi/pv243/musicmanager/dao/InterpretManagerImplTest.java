@@ -46,6 +46,7 @@ public class InterpretManagerImplTest {
 	@Inject
 	private InterpretManager interpretManager;
 
+//All tests pass when this is uncommneted...
 	@Before
 	public void setUp() {
 		interpretManager.removeAllInterprets();
@@ -60,7 +61,7 @@ public class InterpretManagerImplTest {
 	@InSequence(1)
 	public void testCreateNullInterpret() throws IllegalEntityException {
 		try {
-			interpretManager.createInterper(null);
+			interpretManager.createInterpret(null);
 			Assert.fail("IllegalArgumentException not thrown.");
 		} catch (EJBException ex) {
 			if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
@@ -77,7 +78,7 @@ public class InterpretManagerImplTest {
 		Interpret interpret = new Interpret();
 		interpret.setId("id");
 		try {
-			interpretManager.createInterper(interpret);
+			interpretManager.createInterpret(interpret);
 			Assert.fail("IllegalEntityException not thrown.");
 		} catch (IllegalEntityException ex) {
 			// ok
@@ -94,7 +95,7 @@ public class InterpretManagerImplTest {
 		Interpret interpret = new Interpret(null, "Bon Jovi", "England",
 				Interpret.Genre.ROCK);
 
-		interpretManager.createInterper(interpret);
+		interpretManager.createInterpret(interpret);
 
 		Interpret expected = interpretManager.getInterpretById(interpret
 				.getId());
@@ -105,6 +106,7 @@ public class InterpretManagerImplTest {
 		assertEquals(expected.getGenre(), interpret.getGenre());
 		assertEquals(expected.getId(), interpret.getId());
 		assertEquals(expected.getName(), interpret.getName());
+		
 
 		// Returning to previous state
 		interpretManager.deleteInterpret(interpret);
@@ -163,7 +165,7 @@ public class InterpretManagerImplTest {
 		Interpret actual = new Interpret(null, "Pink", "USA",
 				Interpret.Genre.POP);
 
-		interpretManager.createInterper(actual);
+		interpretManager.createInterpret(actual);
 		assertNotNull(interpretManager.getInterpretById(actual.getId()));
 		actual.setGenre(Interpret.Genre.ROCK);
 		interpretManager.updateInterpret(actual);
@@ -229,7 +231,7 @@ public class InterpretManagerImplTest {
 		Interpret interpret = new Interpret(null, "Pink", "USA",
 				Interpret.Genre.POP);
 
-		interpretManager.createInterper(interpret);
+		interpretManager.createInterpret(interpret);
 		assertNotNull(interpretManager.getInterpretById(interpret.getId()));
 		interpretManager.deleteInterpret(interpret);
 
@@ -241,7 +243,9 @@ public class InterpretManagerImplTest {
 	public void searchInterpretTest() {
 		// search null fulltext
 		try {
-			interpretManager.searchInterprets(null);
+			//interpretManager.removeAllInterprets();
+			@SuppressWarnings("unused")
+			List<Interpret> interprets = interpretManager.searchInterprets(null);
 			Assert.fail("Exception not thrown.");
 		} catch (EJBException ex) {
 			if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
@@ -258,7 +262,7 @@ public class InterpretManagerImplTest {
 				Assert.fail("Array is not empty.");
 			}
 		} catch (Exception ex) {
-			Assert.fail("Exception thrown.");
+			Assert.fail("Exception thrown." + ex.getMessage());
 		}
 		// search for "Avril"
 
@@ -270,9 +274,9 @@ public class InterpretManagerImplTest {
 				Interpret.Genre.POP);
 
 		try {
-			interpretManager.createInterper(interpret1);
-			interpretManager.createInterper(interpret2);
-			interpretManager.createInterper(interpret3);
+			interpretManager.createInterpret(interpret1);
+			interpretManager.createInterpret(interpret2);
+			interpretManager.createInterpret(interpret3);
 
 		} catch (Exception ex) {
 			Assert.fail("Failed to create interpret.");
@@ -286,7 +290,7 @@ public class InterpretManagerImplTest {
 				Assert.fail("Array size does not match. Actual: "
 						+ actual.size() + ", Expected: " + expected.size());
 			}
-			if (!actual.contains(interpret1) || !actual.contains(interpret2)) {
+			if (!actual.contains(interpret1) || !actual.contains(interpret3)) {
 				Assert.fail("Does not contain proper interprets");
 			}
 
@@ -299,8 +303,10 @@ public class InterpretManagerImplTest {
 	@Test
 	@InSequence(14)
 	public void getAllInterpretsTest() {
+		
 		// get interprets form an empty cache
 		try {
+			interpretManager.removeAllInterprets();
 			List<Interpret> interprets = interpretManager.getAllInterprets();
 			if (!interprets.isEmpty()) {
 				Assert.fail("Array is not empty.");
@@ -316,9 +322,9 @@ public class InterpretManagerImplTest {
 		Interpret interpret3 = new Interpret(null, "Avril not Lovin", "USA",
 				Interpret.Genre.POP);
 		try {
-			interpretManager.createInterper(interpret1);
-			interpretManager.createInterper(interpret2);
-			interpretManager.createInterper(interpret3);
+			interpretManager.createInterpret(interpret1);
+			interpretManager.createInterpret(interpret2);
+			interpretManager.createInterpret(interpret3);
 		} catch (Exception ex) {
 			Assert.fail("Failed to create interpret.");
 		}
@@ -331,8 +337,10 @@ public class InterpretManagerImplTest {
 		try {
 			List<Interpret> actual = interpretManager.getAllInterprets();
 			if (actual.size() != expected.size()) {
-				Assert.fail("Array size does not match.");
+				Assert.fail("Array size does not match. actual size = " + actual.size());
 			}
+			//cleaning up
+			interpretManager.removeAllInterprets();
 
 		} catch (Exception ex) {
 			Assert.fail("Failed to get all  interprets.");

@@ -20,7 +20,7 @@ public interface InterpretManager {
 	 * @throws IllegalArgumentException when interpret is null.
 	 * @throws IllegalEntityException if interpret id is already set.
 	 * */
-	public void createInterper(Interpret interpret) throws IllegalEntityException, IllegalArgumentException;
+	public void createInterpret(Interpret interpret) throws IllegalEntityException, IllegalArgumentException;
 	
 	/**
 	 * Retrieves {@link Interpret} by id.

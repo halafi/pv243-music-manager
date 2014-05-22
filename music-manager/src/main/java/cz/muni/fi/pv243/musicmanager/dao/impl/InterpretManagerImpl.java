@@ -17,7 +17,6 @@ import org.infinispan.query.SearchManager;
 import org.slf4j.Logger;
 import cz.muni.fi.pv243.musicmanager.dao.InterpretManager;
 import cz.muni.fi.pv243.musicmanager.entities.Interpret;
-import cz.muni.fi.pv243.musicmanager.entities.Song;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
@@ -44,7 +43,7 @@ public class InterpretManagerImpl implements InterpretManager {
 	private final String INTERPRET_CACHE_NAME = "interpretcache";
 
 	@Override
-	public void createInterper(Interpret interpret)
+	public void createInterpret(Interpret interpret)
 			throws IllegalEntityException, IllegalArgumentException {
 		if (interpret == null) {
 			throw new IllegalArgumentException("Interpret is null.");
@@ -169,14 +168,14 @@ public class InterpretManagerImpl implements InterpretManager {
 
 	@Override
 	public List<Interpret> getAllInterprets() throws CacheException {
-		// List<Interpret> interprets = new ArrayList<Interpret>();
-		List<Interpret> interprets = new ArrayList<Interpret>(
-				interpretCache.values());
-
-		/*
-		 * for (Object o : interpretCache.values()) { Interpret i = (Interpret)
-		 * o; interprets.add(i); }
-		 */
+		interpretCache = provider.getCacheContainer().getCache(
+				INTERPRET_CACHE_NAME);
+		
+		List<Interpret> interprets = new ArrayList<Interpret>();
+		for (String key : interpretCache.keySet()){ 
+			  interprets.add(interpretCache.get(key)); 
+		}
+		 
 		return interprets;
 	}
 
@@ -187,12 +186,14 @@ public class InterpretManagerImpl implements InterpretManager {
 			throw new IllegalArgumentException(
 					"Search string is null or empty.");
 		}
+		interpretCache = provider.getCacheContainer().getCache(
+				INTERPRET_CACHE_NAME);
 
 		SearchManager sm = Search
 				.getSearchManager((Cache<String, Interpret>) interpretCache);
 
 		org.infinispan.query.dsl.Query q = sm.getQueryFactory()
-				.from(Song.class).having("name").like("%" + fulltext + "%")
+				.from(Interpret.class).having("name").like("%" + fulltext + "%")
 				.toBuilder().build();
 
 		return q.list();
@@ -200,7 +201,8 @@ public class InterpretManagerImpl implements InterpretManager {
 
 	 @Override
 	public void removeAllInterprets() {
-
+		 interpretCache = provider.getCacheContainer().getCache(
+					INTERPRET_CACHE_NAME);
 		try {
 			utx.begin();
 			interpretCache.clear();
