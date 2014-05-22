@@ -41,7 +41,7 @@ import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
 public class CommentManagerImplTest {
 	@Deployment
     public static WebArchive createDeployment() {
-		return ShrinkWrap.create(MavenImporter.class, "music-manager-test.war")
+		return ShrinkWrap.create(MavenImporter.class, "commentManagerTest.war")
 				  .loadPomFromFile("pom.xml", "arq-jbossas-managed")
 				  .importBuildOutput().as(WebArchive.class);
     }
