@@ -38,7 +38,7 @@ public class SongManagerImplTest {
 	
     @Deployment
     public static WebArchive getDeployment() {
-    	return ShrinkWrap.create(MavenImporter.class, "music-manager-test.war")
+    	return ShrinkWrap.create(MavenImporter.class, "test-song-manager.war")
 				  .loadPomFromFile("pom.xml", "arq-jbossas-managed")
 				  .importBuildOutput().as(WebArchive.class);
     }

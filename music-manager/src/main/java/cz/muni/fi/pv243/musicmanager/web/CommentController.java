@@ -32,7 +32,7 @@ public class CommentController {
 	}
 	
 	public void addComment(){
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.jsf-messages.messages", facesContext.getViewRoot().getLocale());
+		ResourceBundle bundle = ResourceBundle.getBundle("i18n.jsf.Messages", facesContext.getViewRoot().getLocale());
 		try {
 			commentService.createComment(newComment);
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 

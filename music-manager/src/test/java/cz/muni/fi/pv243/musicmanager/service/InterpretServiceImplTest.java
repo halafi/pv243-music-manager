@@ -32,7 +32,7 @@ public class InterpretServiceImplTest {
 	@Deployment
 	public static WebArchive createDeployment() {
 		return ShrinkWrap
-				.create(MavenImporter.class, "test-comment-service.war")
+				.create(MavenImporter.class, "test-interpret-service.war")
 				.loadPomFromFile("pom.xml", "arq-jbossas-managed")
 				.importBuildOutput().as(WebArchive.class);
 	}
