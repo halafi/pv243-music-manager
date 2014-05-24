@@ -16,6 +16,7 @@ import cz.muni.fi.pv243.musicmanager.services.CommentService;
 
 @Model
 public class CommentController {
+	
 	@Inject
 	private FacesContext facesContext;
 	
@@ -37,7 +38,7 @@ public class CommentController {
 			commentService.createComment(newComment);
 			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, 
 									bundle.getString("comment.add.success.summary"),
-									bundle.getString("comment.add..success.detail"));
+									bundle.getString("comment.add.success.detail"));
 			facesContext.addMessage(null, message);
 			initComment();
 		} catch (ServiceException e) {

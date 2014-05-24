@@ -16,7 +16,7 @@
 			<default-locale>en</default-locale>
 		</locale-config>
 		<message-bundle>i18n.jsf.Messages</message-bundle>
-   		<message-bundle>i18n.jsf.ValidationMessages</message-bundle>
+   		<message-bundle>ValidationMessages</message-bundle>
    		<resource-bundle>
 			<base-name>i18n.jsf.Text</base-name>
 			<var>text</var>

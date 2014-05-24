@@ -12,24 +12,23 @@
    <div class="jumbotron">
      <div class="container">
        	<h1>Test create comment</h1>
- 		
-     <h:form>
-     	<h:panelGrid columns="3" columnClasses="titleCell">
-                <h:outputLabel for="text" value="Text:" />
-                <h:inputText id="text" value="#{newComment.text}" />
-                <h:message for="text" errorClass="invalid" />
-            </h:panelGrid>
- 			<p>
-             <h:panelGrid columns="2">
-                 <h:commandButton id="addComment"
-                     action="#{commentController.addComment}"
-                     value="Save" />
-                 <h:messages styleClass="messages"
-                     errorClass="invalid" infoClass="valid"
-                     warnClass="warning" globalOnly="true" />
-             </h:panelGrid>
-         </p>
-     </h:form>
+			<h:form class="form-horizontal">
+				<h:panelGrid columns="3" columnClasses="titleCell">
+	                <h:outputLabel for="text" value="Text:" />
+	                <h:inputText id="text" value="#{newComment.text}" />
+	                <h:message for="text" errorClass="invalid" />
+	            </h:panelGrid>
+			<p>
+				<h:panelGrid columns="2">
+					<h:commandButton id="addComment" 
+						action="#{commentController.addComment}"
+					    value="Save" />
+					<h:messages styleClass="messages"
+						errorClass="invalid" infoClass="valid"
+					    warnClass="warning" globalOnly="true" />
+				</h:panelGrid>
+         	</p>
+			</h:form>
      </div>
    </div>
 </ui:define>
