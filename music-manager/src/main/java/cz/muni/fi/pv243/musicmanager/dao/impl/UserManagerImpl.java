@@ -72,7 +72,9 @@ public class UserManagerImpl implements UserManager{
 		if(user==null){
 			throw new IllegalArgumentException("User is null!");
 		}
-		
+		if(user.getUsername()==null){
+			throw new IllegalArgumentException("User's username is null!");
+		}
 		userCache = provider.getCacheContainer().getCache("usercache");
 		
 		if(!userCache.containsKey(user.getUsername())){
@@ -102,7 +104,9 @@ public class UserManagerImpl implements UserManager{
 		if(user==null){
 			throw new IllegalArgumentException("User is null!");
 		}
-		
+		if(user.getUsername()==null){
+			throw new IllegalArgumentException("User's username is null!");
+		}
 		userCache = provider.getCacheContainer().getCache("usercache");
 		
 		if(!userCache.containsKey(user.getUsername())){
