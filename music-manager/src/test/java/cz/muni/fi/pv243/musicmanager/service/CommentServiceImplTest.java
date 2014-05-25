@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Set;
 
+import javax.ejb.EJBException;
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -324,32 +325,15 @@ public class CommentServiceImplTest {
 		}
     }
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	@Test
 	@InSequence(17)
-    public void testDeleteCommentWithNullAuthor() {
-		Comment comment = newComment("1", "hello world", null, "5", new Date());
-    
+    public void testDeleteNullComment() {
 		try {
-			commentService.deleteComment(comment);
-			Assert.fail("ConstraintViolationException not thrown");
+			commentService.deleteComment(null);
+			Assert.fail("IllegalArgumentException not thrown");
 		} catch (ServiceException e) {
-			if(e.getCause() instanceof ConstraintViolationException){
-				ConstraintViolationException cx = (ConstraintViolationException)e.getCause();
-				Set<ConstraintViolation<?>> violations = cx.getConstraintViolations();
-				assertEquals(1, violations.size());
-				assertEquals(null, violations.iterator().next().getInvalidValue());
+			if(e.getCause() instanceof EJBException){
+				//ok
 			} else {
 				Assert.fail("Wrong type of Exception was thrown");
 			}
@@ -358,11 +342,11 @@ public class CommentServiceImplTest {
 	
 	@Test
 	@InSequence(18)
-    public void testDeleteCommentWithNullSongId() {
-		Comment comment = newComment("1", "hello world", "Kouba", null, new Date());
+    public void testCreateCommentWithNullText() {
+		Comment comment = newComment(null, null, "Kouba", "5", new Date());
     
 		try {
-			commentService.deleteComment(comment);
+			commentService.createComment(comment);
 			Assert.fail("ConstraintViolationException not thrown");
 		} catch (ServiceException e) {
 			if(e.getCause() instanceof ConstraintViolationException){
@@ -378,11 +362,11 @@ public class CommentServiceImplTest {
 	
 	@Test
 	@InSequence(19)
-    public void testDeleteCommentWithNullPostTime() {
-		Comment comment = newComment("1", "hello world", "Kouba", "5", null);
+    public void testUpdateCommentWithNullText() {
+		Comment comment = newComment(null, null, "Kouba", "5", new Date());
     
 		try {
-			commentService.deleteComment(comment);
+			commentService.updateComment(comment);
 			Assert.fail("ConstraintViolationException not thrown");
 		} catch (ServiceException e) {
 			if(e.getCause() instanceof ConstraintViolationException){
@@ -395,83 +379,6 @@ public class CommentServiceImplTest {
 			}
 		}
     }
-	
-	@Test
-	@InSequence(20)
-    public void testDeleteCommentWithBlankText() {
-		Comment comment = newComment("1", "", "Kouba", "5", new Date());
-    
-		try {
-			commentService.deleteComment(comment);
-			Assert.fail("ConstraintViolationException not thrown");
-		} catch (ServiceException e) {
-			if(e.getCause() instanceof ConstraintViolationException){
-				ConstraintViolationException cx = (ConstraintViolationException)e.getCause();
-				Set<ConstraintViolation<?>> violations = cx.getConstraintViolations();
-				assertEquals(2, violations.size());
-				assertEquals("", violations.iterator().next().getInvalidValue());
-			} else {
-				Assert.fail("Wrong type of Exception was thrown");
-			}
-		}
-    }
-	
-	@Test
-	@InSequence(21)
-    public void testDeleteCommentWithOnlyWhiteSpacesText() {
-		Comment comment = newComment("1", "    ", "Kouba", "5", new Date());
-    
-		try {
-			commentService.deleteComment(comment);
-			Assert.fail("ConstraintViolationException not thrown");
-		} catch (ServiceException e) {
-			if(e.getCause() instanceof ConstraintViolationException){
-				ConstraintViolationException cx = (ConstraintViolationException)e.getCause();
-				Set<ConstraintViolation<?>> violations = cx.getConstraintViolations();
-				assertEquals(1, violations.size());
-				assertEquals("    ", violations.iterator().next().getInvalidValue());
-			} else {
-				Assert.fail("Wrong type of Exception was thrown");
-			}
-		}
-    }
-	
-	@Test
-	@InSequence(22)
-    public void testDeleteCommentWithTooWideText() {
-		Comment comment = newComment("1", "dfdfjdsakdjklsadjklsdjksdjksajdksajdksadjsajdsafjsdkgjdkgbjdfkghsdjfsdfsdfsfsdfjshjfshfkshfjshfjkshfksdhfjsdfdsfisdjfksdjfsklfsdlkfhdjghjfdkgbdfsklgbkjfbsdkjgbfdkjgbfdkgdslkfaklthdsgfndsajgnfdkjgkdfgbghjfsdfsdhfjkshfjksdhfkjdfhjsfhjsfhjkshfsdhfjshfjsdhfjsdhfjshfsfsfsdjfsdhf", "Kouba", "5", new Date());
-    
-		try {
-			commentService.deleteComment(comment);
-			Assert.fail("ConstraintViolationException not thrown");
-		} catch (ServiceException e) {
-			if(e.getCause() instanceof ConstraintViolationException){
-				ConstraintViolationException cx = (ConstraintViolationException)e.getCause();
-				Set<ConstraintViolation<?>> violations = cx.getConstraintViolations();
-				assertEquals(1, violations.size());
-				assertEquals("dfdfjdsakdjklsadjklsdjksdjksajdksajdksadjsajdsafjsdkgjdkgbjdfkghsdjfsdfsdfsfsdfjshjfshfkshfjshfjkshfksdhfjsdfdsfisdjfksdjfsklfsdlkfhdjghjfdkgbdfsklgbkjfbsdkjgbfdkjgbfdkgdslkfaklthdsgfndsajgnfdkjgkdfgbghjfsdfsdhfjkshfjksdhfkjdfhjsfhjsfhjkshfsdhfjshfjsdhfjsdhfjshfsfsfsdjfsdhf", violations.iterator().next().getInvalidValue());
-			} else {
-				Assert.fail("Wrong type of Exception was thrown");
-			}
-		}
-    }
-	
-	@Test
-	@InSequence(23)
-    public void testDeleteNullComment() {
-		try {
-			commentService.deleteComment(null);
-			Assert.fail("IllegalArgumentException not thrown");
-		} catch (ServiceException e) {
-			if(e.getCause() instanceof IllegalArgumentException){
-				//ok
-			} else {
-				Assert.fail("Wrong type of Exception was thrown");
-			}
-		}
-    }
-	
-	
 	
 	private Comment newComment(String id, String text, String authorUserName, String songId, Date postTime){
     	Comment comment = new Comment();

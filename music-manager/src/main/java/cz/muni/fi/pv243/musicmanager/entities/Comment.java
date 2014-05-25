@@ -40,6 +40,7 @@ public class Comment implements Serializable{
 	private Date postTime;
 	
 	@Field
+	@NotBlank
 	@Size(min = 1, max = 250, message="{comment.text.size}")
 	private String text;
 

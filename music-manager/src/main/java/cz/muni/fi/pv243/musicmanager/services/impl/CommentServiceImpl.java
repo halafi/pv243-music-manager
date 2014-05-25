@@ -70,7 +70,6 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public void deleteComment(Comment comment) throws ServiceException {
 		try {
-			validateComment(comment);
 			commentManager.deleteComment(comment);
 		} catch (Exception e) {
 			logger.debug("Some exception was thrown by CommentManager or while validating comment.", e);
