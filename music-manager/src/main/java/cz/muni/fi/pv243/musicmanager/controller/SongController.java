@@ -1,4 +1,5 @@
-package cz.muni.fi.pv243.musicmanager.web;
+package cz.muni.fi.pv243.musicmanager.controller;
+
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -6,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
@@ -17,6 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.Part;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.entities.Comment;
@@ -34,10 +37,13 @@ import cz.muni.fi.pv243.musicmanager.services.SongService;
 public class SongController {
 	
 	public static final String SONG_FOLDER =
-			System.getProperty("user.home") + File.separator + "music-manager";
+			System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "songs";
 	
 	@Inject
 	private FacesContext facesContext;
+	
+	@Inject
+	private ResourceBundle bundle;
 	
 	@Inject
 	private SongService songService;
@@ -49,6 +55,8 @@ public class SongController {
 	@Named
 	private Song newSong;
 	
+	private Part file;
+	
 	@PostConstruct
 	public void initSong(){
 		newSong = new Song();
@@ -57,8 +65,6 @@ public class SongController {
 		newSong.setInterpretId("Unknown");
 		newSong.setUploaderUserName("Unknown");
 	}
-	
-	private Part file;
 	
 	public Part getFile() {
 		return file;
@@ -69,7 +75,6 @@ public class SongController {
 	}
 	
 	public void addSong() throws IOException {
-		ResourceBundle bundle = ResourceBundle.getBundle("i18n.jsf.Messages", facesContext.getViewRoot().getLocale());
 		try {
 			validateSong();
 			uploadSong();		
@@ -77,21 +82,76 @@ public class SongController {
 			songService.createSong(newSong);
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
 					bundle.getString("song.add.success"), null));
-			logger.info("Song uploaded to: " + SONG_FOLDER + File.separator + getFilename(file));
+			logger.info(newSong.getSongName()+" uploaded to " + SONG_FOLDER + File.separator + getFilename(file));
 			initSong();
-		} catch (SongFileValidationException ex) {
+		} catch (SongFileValidationException e) {
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					bundle.getString("song.add.fail.validation"), null));
-		} catch (FileUploadException ex) {
+		} catch (FileUploadException e) {
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
 					bundle.getString("song.add.fail.upload"), null));
-		} catch (ServiceException ex) {
+		} catch (ServiceException e) {
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					bundle.getString("song.add.fail.service"), null));
-		} catch (Exception ex) {
+		} catch (Exception e) {
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					bundle.getString("song.add.fail.unknown") + ex.getMessage(), null));
+					bundle.getString("song.add.fail.unknown") + e.getMessage(), null));
 		}
+	}
+	
+	public void playSong(String id) {
+		try {
+			Song song = songService.getSong(id);
+			song.setTimesPlayed(song.getTimesPlayed()+1);
+			songService.updateSong(song);
+		} catch (ServiceException e) {
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					bundle.getString("song.play.fail.service") + e.getMessage(), null));
+		}
+	}
+	
+	@Produces
+	@Named
+	public List<Song> getAllSongs() {
+		try {
+			return songService.getSongsbyInterpret("Unknown");
+		} catch (ServiceException e) {
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					bundle.getString("song.getAll.fail.service"), null));
+		}
+		return null;
+	}
+	
+	public void removeSong(String id) {
+		try {
+			Song song = songService.getSong(id);
+			File toRemove = new File(song.getFilePath());
+			if (toRemove.delete()) {
+				songService.removeSong(songService.getSong(id));
+			}
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+					bundle.getString("song.remove.success"), null));
+		} catch (ServiceException e) {
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					bundle.getString("song.remove.fail.service"), null));
+		}
+	}
+	
+	public void removeAllSongs() {
+		try {
+			songService.removeAllSongs();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, 
+					bundle.getString("song.remove.success"), null));
+		} catch (ServiceException e) {
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					bundle.getString("song.remove.fail.service"), null));
+		}
+		try {
+			FileUtils.cleanDirectory(new File(SONG_FOLDER));
+		} catch (IOException e) {
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					bundle.getString("song.remove.fail.io"), null));
+		} 
 	}
 	
     public void validateSong() throws SongFileValidationException {
@@ -110,6 +170,9 @@ public class SongController {
 	    		is.close();
 	    		throw new FileUploadException("File already exist.");
 	    	}
+	    	if(!toFile.getParentFile().exists()) { // create missing folder
+	    		toFile.getParentFile().mkdirs();
+    		}
 	    	FileOutputStream os = new FileOutputStream(toFile);
 	    	BufferedOutputStream bos = new BufferedOutputStream(os);
 	    	int read = -1;
@@ -134,4 +197,5 @@ public class SongController {
     		}
     	return null;
     }
+
 }

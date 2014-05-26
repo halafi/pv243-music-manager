@@ -48,8 +48,9 @@
 	</div>
 	
 	<!-- error messages -->
-	<h:messages styleClass="container list-group" errorClass="alert alert-danger" infoClass="alert alert-success" warnClass="alert alert-warning" globalOnly="true" />
-
+	<div class="container">
+			<h:messages styleClass="list-unstyled" errorClass="alert alert-danger" infoClass="alert alert-success" warnClass="alert alert-warning" globalOnly="false" />
+	</div>
 	<!-- page content will be posted here -->
 	<ui:insert name="content"><!-- default content --></ui:insert>
 	    

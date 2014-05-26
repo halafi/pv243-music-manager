@@ -1,4 +1,4 @@
-package cz.muni.fi.pv243.musicmanager.web;
+package cz.muni.fi.pv243.musicmanager.controller;
 
 import java.util.ResourceBundle;
 
