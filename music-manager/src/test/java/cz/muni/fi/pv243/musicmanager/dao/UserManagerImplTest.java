@@ -284,6 +284,8 @@ public class UserManagerImplTest {
 		expected.add(testUser1);
 		assertTrue(userManager.getAllUsers().containsAll(expected));
 	}
+	
+	
 	/*
 	 * Creates New user
 	 */

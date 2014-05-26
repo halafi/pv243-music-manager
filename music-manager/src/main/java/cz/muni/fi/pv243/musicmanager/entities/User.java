@@ -6,6 +6,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 
 /**
  * @author Daniel
@@ -18,18 +21,27 @@ public class User implements Serializable{
 	
 	@Field
 	@NotNull
+	@NotBlank
+	@Length(min=2, max=25)
 	private String username;
 	@Field
 	@NotNull
+	@NotBlank
 	private String password;
 	@Field
 	@NotNull
+	@NotBlank
+	@Length(min=2, max=25)
 	private String firstname;
 	@Field
 	@NotNull
+	@NotBlank
+	@Length(min=2, max=25)
 	private String lastname;
 	@Field
-	@NotNull
+	@NotNull	
+	@Email
+	@NotBlank
 	private String email;
 	
 	
