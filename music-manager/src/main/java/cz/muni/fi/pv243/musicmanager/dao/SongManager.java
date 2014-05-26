@@ -50,7 +50,7 @@ public interface SongManager {
 	public Song getSong(String id) throws IllegalArgumentException, CacheException; 
 	
 	/**
-	 * Retrieves every {@link Song} fromt he cache.
+	 * Retrieves every {@link Song} from the cache.
 	 * @return list of every song
 	 * @throws CacheException on infinispan cache operation error
 	 */

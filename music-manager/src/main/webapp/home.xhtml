@@ -1,0 +1,67 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"   
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<ui:define name="title">#{text['index.title']}</ui:define>
+
+<ui:define name="content"> 
+<div class="container">
+   <div class="row row-offcanvas row-offcanvas-right">
+
+        <div class="col-xs-12 col-sm-9">
+          <p class="pull-right visible-xs">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Top 10</button>
+          </p>
+          <div class="jumbotron">
+            <h1>Home</h1>
+            <p>Welcome to your homepage. Here you can play and manage your songs.</p>
+          </div>
+			<table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Interpret</th>
+          <th>Times Played</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="glyphicon glyphicon-play"/> We Will Rock You</td>
+          <td>Queen</td>
+          <td>10</td>
+          <td><span class="glyphicon glyphicon-trash"/></td>
+        </tr>
+        <tr>
+          <td><span class="glyphicon glyphicon-play"/> Another One Bites the Dust</td>
+          <td>Queen</td>
+          <td>3</td>
+          <td><span class="glyphicon glyphicon-trash"/></td>
+        </tr>
+      </tbody>
+      
+    </table>
+    <button type="button" class="btn btn-default">Upload song</button> 
+        </div><!--/span-->
+
+        <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
+          <div class="list-group">
+          	<h4>Top 10 songs</h4>
+            <a href="#" class="list-group-item active">We Will Rock You</a>
+            <a href="#" class="list-group-item">Another One Bites the Dust</a>
+            <a href="#" class="list-group-item">Song3</a>
+            <a href="#" class="list-group-item">Song4</a>
+            <a href="#" class="list-group-item">Song5</a>
+            <a href="#" class="list-group-item">Song6</a>
+            <a href="#" class="list-group-item">Song7</a>
+            <a href="#" class="list-group-item">Song8</a>
+            <a href="#" class="list-group-item">Song9</a>
+            <a href="#" class="list-group-item">Song10</a>
+          </div>
+        </div><!--/span-->
+      </div><!--/row-->
+   </div><!--/container-->
+</ui:define>
+
+</ui:composition>

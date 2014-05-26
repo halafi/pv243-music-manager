@@ -29,10 +29,6 @@ public class SongServiceImpl implements SongService {
 	
 	@Inject
 	private Logger logger;
-	
-	// FILE UPLOAD WILL HAPPEN ON PRESENTATION LAYER
-	// public static final String SONG_FOLDER = 
-	// System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "songs";
 
 	@Override
 	public void createSong(Song song) throws ServiceException {
@@ -68,12 +64,6 @@ public class SongServiceImpl implements SongService {
 
 	@Override
 	public void removeSong(Song song) throws ServiceException {
-		try {
-			validateSong(song);
-		} catch(ConstraintViolationException ex) {
-			logger.debug("Failed to validate song.", ex);
-			throw new ServiceException("Failed to validate song.", ex);
-		}
 		try {
 			songManager.removeSong(song);
 		} catch (Exception ex) {
