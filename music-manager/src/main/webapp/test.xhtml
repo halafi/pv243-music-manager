@@ -1,0 +1,32 @@
+<ui:composition template="template.xhtml"
+	 xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+      
+<ui:define name="title">
+    Music Manager Test Page
+</ui:define>
+
+<ui:define name="content"> 
+<div class="container">	
+     	<h2>Test upload song</h2>
+			<h:form id="form" enctype="multipart/form-data">
+			  <h:inputFile id="file" value="#{songController.file}"/><br/>
+	          <h:outputLabel for="name" value="Song name:"/>
+	          <h:inputText id="name" value="#{newSong.songName}"/><br/>
+			  <h:commandButton value="Upload and Submit" action="#{songController.addSong}"/>
+			</h:form>
+		<h2>Test create comment</h2>
+			<h:form class="form-horizontal">
+				<h:panelGrid columns="3" columnClasses="titleCell">
+	                <h:outputLabel for="text" value="Text:" />
+	                <h:inputText id="text" value="#{newComment.text}" />
+	                <h:message for="text" styleClass="alert alert-warning"/>
+	            </h:panelGrid>
+	            <h:commandButton action="#{commentController.addComment}" value="Save"/>
+			</h:form>
+</div>
+</ui:define>
+
+</ui:composition>

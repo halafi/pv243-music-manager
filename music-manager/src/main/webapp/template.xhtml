@@ -46,16 +46,19 @@
 			</div>
 		</div>
 	</div>
-	    
+	
+	<!-- error messages -->
+	<h:messages styleClass="container list-group" errorClass="alert alert-danger" infoClass="alert alert-success" warnClass="alert alert-warning" globalOnly="true" />
+
 	<!-- page content will be posted here -->
 	<ui:insert name="content"><!-- default content --></ui:insert>
 	    
 	<!-- footer + scripts for faster load -->
 	<div class="container">
 		<hr/>
-			<footer>
-				<p><h:outputText value="#{text['footer.text']}"/></p>
-			</footer>
+		<footer>
+			<p><h:outputText value="#{text['footer.text']}"/></p>
+		</footer>
 	</div>
 	
 	<script src="./Jumbotron Template for Bootstrap_files/jquery.min.js"></script>
