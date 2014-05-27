@@ -39,6 +39,8 @@
 
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
+
+		<version.picketlink.javaee.bom>2.6.0.CR1</version.picketlink.javaee.bom>
 	</properties>
 
 
@@ -52,12 +54,12 @@
 				<scope>import</scope>
 			</dependency>
 			<dependency>
-		      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-		      <artifactId>shrinkwrap-resolver-depchain</artifactId>
-		      <version>${version.shrinkwrap.resolvers}</version>
-		      <scope>test</scope>
-		      <type>pom</type>
-		    </dependency>
+				<groupId>org.jboss.shrinkwrap.resolver</groupId>
+				<artifactId>shrinkwrap-resolver-depchain</artifactId>
+				<version>${version.shrinkwrap.resolvers}</version>
+				<scope>test</scope>
+				<type>pom</type>
+			</dependency>
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>
 				<artifactId>arquillian-bom</artifactId>
@@ -65,41 +67,48 @@
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
+			<dependency>
+				<groupId>org.picketlink</groupId>
+				<artifactId>picketlink-javaee-6.0</artifactId>
+				<type>pom</type>
+				<scope>import</scope>
+				<version>${version.picketlink.javaee.bom}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
 
 	<dependencies>
 		<dependency>
-	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-	      <artifactId>shrinkwrap-resolver-api</artifactId>
-	      <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-	      <artifactId>shrinkwrap-resolver-spi</artifactId>
-	      <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-	      <artifactId>shrinkwrap-resolver-api-maven</artifactId>
-	      <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-	      <artifactId>shrinkwrap-resolver-spi-maven</artifactId>
-	      <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-	      <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
-	      <scope>test</scope>
-	    </dependency>
-	    <dependency>
-	      <groupId>org.jboss.shrinkwrap.resolver</groupId>
-	      <artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
-	      <scope>test</scope>
-	    </dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-spi</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-api-maven</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-spi-maven</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-impl-maven</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.shrinkwrap.resolver</groupId>
+			<artifactId>shrinkwrap-resolver-impl-maven-archive</artifactId>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Hibernate search -->
 		<dependency>
@@ -107,7 +116,7 @@
 			<artifactId>hibernate-search-engine</artifactId>
 			<version>${version.hibernate.search}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search-infinispan</artifactId>
@@ -198,19 +207,13 @@
 
 		<!-- Annotation processor to generate the JPA 2.0 metamodel classes for 
 			typesafe criteria queries -->
-		<!--<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId> 
-			<version>4.3.5.Final</version>
-		</dependency>-->
+		<!--<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-jpamodelgen</artifactId> 
+			<version>4.3.5.Final</version> </dependency> -->
 
 		<!-- Annotation processor that raising compilation errors whenever constraint 
 			annotations are incorrectly used. -->
-		<!--<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator-annotation-processor</artifactId>
-			<scope>provided</scope>
-		</dependency>-->
+		<!--<dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator-annotation-processor</artifactId> 
+			<scope>provided</scope> </dependency> -->
 
 		<!-- Tests -->
 		<dependency>
@@ -226,14 +229,25 @@
 			<artifactId>arquillian-junit-container</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- Servlet -->
 		<dependency>
 			<groupId>org.apache.geronimo.specs</groupId>
 			<artifactId>geronimo-servlet_3.0_spec</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+
+		<!-- picketlink -->
+		<dependency>
+			<groupId>org.picketlink</groupId>
+			<artifactId>picketlink-api</artifactId>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.picketlink</groupId>
+			<artifactId>picketlink-impl</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 
 	</dependencies>
 

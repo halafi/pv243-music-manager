@@ -1,21 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui:composition template="template.xhtml"
-	 xmlns="http://www.w3.org/1999/xhtml"   
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:ui="http://java.sun.com/jsf/facelets">
-      
-<ui:define name="title">
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="title">
     Music Manager Registration Form
 </ui:define>
 
-<ui:define name="content">
-<div class="container">
-	<div class="jumbotron">
-		<h2>Registration Form</h2>
-		<br/>
-		<p><a class="btn btn-primary btn-lg" role="button" href="home.jsf">Submit</a></p>
-		<hr/>
-	</div>
-</div>
-</ui:define>
+	<ui:define name="content">
+		<div class="container">
+			<div class="jumbotron">
+				<h:form role="form">
+					<h2>User Registration</h2>
+					<div class="form-group">
+						<div class="form-group">
+							<h:outputLabel for="username" value="Userame: "/>
+							<h:inputText  class="form-control" id="username" value="#{newUser.username}"/>
+							<h:outputLabel for="firstname" value="Firstname:" />
+							<h:inputText id="firstname" value="#{newUser.firstname}" class="form-control"/>
+							<h:outputLabel for="lastname" value="Lastname:" />
+							<h:inputText id="lastname" value="#{newUser.lastname}" class="form-control"/>
+							<h:outputLabel for="email" value="Email:" />
+							<h:inputText id="email" value="#{newUser.email}" class="form-control"/>
+							<h:outputLabel for="password" value="Password:" />
+							<h:inputText id="password" value="#{newUser.password}" class="form-control"/>
+								
+						</div>
+
+						<p>
+							<h:panelGrid>
+								<h:commandButton id="register" value="Register"
+									action="#{userController.register()}" class="btn btn-default"/>
+							</h:panelGrid>
+						</p>
+					</div>
+
+				</h:form>
+				<hr />
+			</div>
+		</div>
+
+
+	</ui:define>
 </ui:composition>
