@@ -6,6 +6,7 @@ import java.io.File;
 
 import javax.annotation.PreDestroy;
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.ws.rs.Produces;
 
 import org.infinispan.commons.api.BasicCacheContainer;
@@ -22,14 +23,14 @@ import org.infinispan.transaction.TransactionMode;
 import org.infinispan.transaction.lookup.GenericTransactionManagerLookup;
 import org.infinispan.util.concurrent.IsolationLevel;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ApplicationScoped
 public class CacheContainerProvider {
-	static final Logger logger = LoggerFactory.getLogger(CacheContainerProvider.class);
-
     private BasicCacheContainer manager;
 
+    @Inject
+    private Logger logger;
+    
     @Produces
     public BasicCacheContainer getCacheContainer() {
         if (manager == null) {
@@ -50,7 +51,7 @@ public class CacheContainerProvider {
 	       	          						.locking().isolationLevel(IsolationLevel.REPEATABLE_READ)
 	       	          						.persistence().addStore(LevelDBStoreConfigurationBuilder.class)
 	       	          						.location(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "levelDB" + File.separator + "data")
-	       	          						.expiredLocation(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "levelDB" + File.separator + "expired").expiryQueueSize(10).purgeOnStartup(true)
+	       	          						.expiredLocation(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "levelDB" + File.separator + "expired").expiryQueueSize(10)
         									.eviction().strategy(EvictionStrategy.LIRS).maxEntries(100)
         									.indexing().enable().addProperty("default.directory_provider", "ram")
         									.build();

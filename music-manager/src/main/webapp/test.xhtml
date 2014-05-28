@@ -57,6 +57,14 @@
 	        <h:commandButton styleClass="btn btn-default" value="Save" action="#{commentController.addComment}" />
 			</h:form>
 		</div>
+		<h2>Comments</h2>
+		<h:dataTable value="#{commentController.commentsBySong}" var="comment" styleClass="table">
+			<h:column><f:facet name="header">Id</f:facet>#{comment.id}</h:column>
+	   		<h:column><f:facet name="header">Text</f:facet>#{comment.text}</h:column>
+	   		<h:column><f:facet name="header">Author</f:facet>#{comment.authorUserName}</h:column>
+	   		<h:column><f:facet name="header">SongId</f:facet>#{comment.songId}</h:column>
+	   		<h:column><f:facet name="header">PostTime</f:facet>#{comment.postTime}</h:column>
+		</h:dataTable>
 </div>
 </ui:define>
 
