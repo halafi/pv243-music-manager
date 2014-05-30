@@ -10,9 +10,11 @@ import javax.inject.Inject;
 import javax.ws.rs.Produces;
 
 import org.infinispan.commons.api.BasicCacheContainer;
+import org.infinispan.configuration.cache.AsyncStoreConfigurationBuilder;
 import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
+import org.infinispan.configuration.cache.SingleFileStoreConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.eviction.EvictionStrategy;
@@ -44,17 +46,22 @@ public class CacheContainerProvider {
         	               .transaction().transactionMode(TransactionMode.TRANSACTIONAL)
         	               .build();  //default config
         	
-        	Configuration musicCacheConfig = new ConfigurationBuilder().jmxStatistics().enable()
-	       	          						.clustering().cacheMode(CacheMode.LOCAL)
-	       	          						.transaction().transactionMode(TransactionMode.TRANSACTIONAL).autoCommit(false)
-	       	          						.lockingMode(LockingMode.OPTIMISTIC).transactionManagerLookup(new GenericTransactionManagerLookup())
-	       	          						.locking().isolationLevel(IsolationLevel.REPEATABLE_READ)
-	       	          						.persistence().addStore(LevelDBStoreConfigurationBuilder.class)
-	       	          						.location(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "levelDB" + File.separator + "data")
-	       	          						.expiredLocation(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "levelDB" + File.separator + "expired").expiryQueueSize(10)
-        									.eviction().strategy(EvictionStrategy.LIRS).maxEntries(100)
-        									.indexing().enable().addProperty("default.directory_provider", "ram")
-        									.build();
+        	Configuration musicCacheConfig = new ConfigurationBuilder().persistence()
+        																.passivation(false)
+        																.addSingleFileStore()
+        																.preload(true)
+        																.shared(false)
+        																.fetchPersistentState(true)
+        																.ignoreModifications(false)
+        																.purgeOnStartup(false)
+        																.location(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "data")
+        																.async()
+        																	.enabled(true)
+        																	.threadPoolSize(5)
+        															.build();
+        																
+        															
+        			
         	
         	manager = new DefaultCacheManager(glob, defaultConfig);
         	//defining cache for each entity
