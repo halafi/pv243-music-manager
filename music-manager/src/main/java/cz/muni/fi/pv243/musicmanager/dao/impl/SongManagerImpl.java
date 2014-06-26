@@ -21,6 +21,7 @@ import org.infinispan.query.SearchManager;
 import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.dao.SongManager;
+import cz.muni.fi.pv243.musicmanager.entities.Interpret;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
@@ -180,6 +181,8 @@ public class SongManagerImpl implements SongManager {
 		
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
+		//This doesn't seem to get data from cache store
+		/*
 		SearchManager sm = Search.getSearchManager((Cache<String, Song>) songCache);
 		
 		org.infinispan.query.dsl.Query q = sm.getQueryFactory().from(Song.class)
@@ -193,6 +196,12 @@ public class SongManagerImpl implements SongManager {
 				}
 			}
 		
+		return songs;
+		*/
+		
+		for (String key : songCache.keySet()){ 
+			  songs.add(songCache.get(key)); 
+		}
 		return songs;
 	}
 
@@ -284,7 +293,12 @@ public class SongManagerImpl implements SongManager {
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		try {
 			userTransaction.begin();
-			songCache.clear();
+			//Doesn't seem to remove data from cache store
+			//songCache.clear();
+		
+			for (String key : songCache.keySet()){ 
+				songCache.remove(key);
+			}
 			userTransaction.commit();
 		} catch (Exception e) {
             if (userTransaction != null) {

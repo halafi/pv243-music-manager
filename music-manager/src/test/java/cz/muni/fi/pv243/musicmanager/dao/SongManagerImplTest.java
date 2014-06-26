@@ -263,7 +263,7 @@ public class SongManagerImplTest {
     	try {
     		List<Song> actual = songManager.getAllSongs();
     		if (actual.size() != 2) {
-    			Assert.fail("Array size does not match.");
+    			Assert.fail("Array size does not match. Actual size: " + actual.size());
     		}
     		Collections.sort(actual, idComparator);
     		for (int i = 0; i < actual.size(); i++) {

@@ -55,14 +55,13 @@ public class CacheContainerProvider {
         																.ignoreModifications(false)
         																.purgeOnStartup(false)
         																.location(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "data")
-        																.async()
-        																	.enabled(true)
-        																	.threadPoolSize(5)
+        																//.location("C:\\music-manager" + File.separator + "data")
+        																.async().enabled(true).threadPoolSize(5)
+        																	//TODO: find non-depricated equivalent
+        																.indexing().enable().addProperty("default.directory_provider", "ram")
         															.build();
-        																
-        															
-        			
         	
+
         	manager = new DefaultCacheManager(glob, defaultConfig);
         	//defining cache for each entity
         	((DefaultCacheManager) manager).defineConfiguration("usercache", musicCacheConfig);

@@ -46,7 +46,6 @@ public class InterpretManagerImplTest {
 	@Inject
 	private InterpretManager interpretManager;
 
-//All tests pass when this is uncommneted...
 	@Before
 	public void setUp() {
 		interpretManager.removeAllInterprets();
@@ -110,6 +109,7 @@ public class InterpretManagerImplTest {
 
 		// Returning to previous state
 		interpretManager.deleteInterpret(interpret);
+		
 	}
 
 	@Test
@@ -226,7 +226,7 @@ public class InterpretManagerImplTest {
 
 	@Test
 	@InSequence(12)
-	public void testDeleteComment() throws IllegalArgumentException,
+	public void testDeleteInterpret() throws IllegalArgumentException,
 			IllegalEntityException, NonExistingEntityException {
 		Interpret interpret = new Interpret(null, "Pink", "USA",
 				Interpret.Genre.POP);
@@ -309,18 +309,20 @@ public class InterpretManagerImplTest {
 			interpretManager.removeAllInterprets();
 			List<Interpret> interprets = interpretManager.getAllInterprets();
 			if (!interprets.isEmpty()) {
-				Assert.fail("Array is not empty.");
+				Assert.fail("Array is not empty. The size is " + interprets.size());
 			}
 		} catch (Exception ex) {
-			Assert.fail("Exception thrown.");
+			Assert.fail("Exception thrown while getting all interprets: " + ex.toString());
 		}
 		// create and get
+		
 		Interpret interpret1 = new Interpret(null, "Avril Lavigne", "USA",
 				Interpret.Genre.POP);
 		Interpret interpret2 = new Interpret(null, "Pink", "USA",
 				Interpret.Genre.POP);
 		Interpret interpret3 = new Interpret(null, "Avril not Lovin", "USA",
 				Interpret.Genre.POP);
+				
 		try {
 			interpretManager.createInterpret(interpret1);
 			interpretManager.createInterpret(interpret2);
@@ -335,6 +337,7 @@ public class InterpretManagerImplTest {
 		expected.add(interpret3);
 
 		try {
+			
 			List<Interpret> actual = interpretManager.getAllInterprets();
 			if (actual.size() != expected.size()) {
 				Assert.fail("Array size does not match. actual size = " + actual.size());

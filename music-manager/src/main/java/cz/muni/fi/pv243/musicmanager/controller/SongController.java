@@ -114,7 +114,8 @@ public class SongController {
 	@Named
 	public List<Song> getAllSongs() {
 		try {
-			return songService.getSongsbyInterpret("Unknown");
+			//return songService.getSongsbyInterpret("Unknown");
+			return songService.getAllSongs();
 		} catch (ServiceException e) {
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					bundle.getString("song.getAll.fail.service"), null));

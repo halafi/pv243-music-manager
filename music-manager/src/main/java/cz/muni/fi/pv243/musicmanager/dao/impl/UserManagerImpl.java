@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.transaction.UserTransaction;
@@ -162,7 +163,14 @@ public class UserManagerImpl implements UserManager{
 		userCache = provider.getCacheContainer().getCache("usercache");
 		try{
 			userTransaction.begin();
-			userCache.clear();
+						
+			//Doesn't seem to remove data from cache store
+			//userCache.clear();
+			
+			for (String key : userCache.keySet()){ 
+				userCache.remove(key);
+			}
+			
 			userTransaction.commit();
 		}catch  (Exception trEx) {
 			if(userTransaction != null){

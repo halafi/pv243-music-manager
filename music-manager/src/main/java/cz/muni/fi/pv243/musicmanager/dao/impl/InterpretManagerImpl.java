@@ -170,8 +170,12 @@ public class InterpretManagerImpl implements InterpretManager {
 	public List<Interpret> getAllInterprets() throws CacheException {
 		interpretCache = provider.getCacheContainer().getCache(
 				INTERPRET_CACHE_NAME);
+		//testing cache store
+		//interpretCache.stop();
+		//interpretCache.start();
 		
 		List<Interpret> interprets = new ArrayList<Interpret>();
+			
 		for (String key : interpretCache.keySet()){ 
 			  interprets.add(interpretCache.get(key)); 
 		}
@@ -205,7 +209,12 @@ public class InterpretManagerImpl implements InterpretManager {
 					INTERPRET_CACHE_NAME);
 		try {
 			utx.begin();
-			interpretCache.clear();
+			//Doesn't seem to remove data from cache store
+			//interpretCache.clear();
+			
+			for (String key : interpretCache.keySet()){ 
+				interpretCache.remove(key);
+			}
 			utx.commit();
 		} catch (Exception e) {
 			if (utx != null) {
