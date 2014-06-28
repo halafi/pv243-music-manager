@@ -1,0 +1,39 @@
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="title">
+    Music Manager Song Create
+</ui:define>
+
+	<ui:define name="content">
+		<div class="container">
+			<h2>Upload song</h2>
+			<div class="well">
+				<h:form id="songForm" enctype="multipart/form-data">
+					<div class="form-group">
+						<h:outputLabel for="songName" value="Song name" />
+						<h:inputText styleClass="form-control" id="songName"
+							value="#{newSong.songName}" />
+					</div>
+					<div class="form-group">
+						<h:selectOneMenu value="#{newSong.interpretId}" id="interpret">
+							<f:selectItems value="#{songController.interprets}" />
+							
+						</h:selectOneMenu>
+					</div>
+					<div class="form-group">
+						<h:outputLabel for="file" value="File input" />
+						<h:inputFile id="file" value="#{songController.file}" />
+					</div>
+
+					<h:commandButton styleClass="btn btn-default"
+						value="Upload and Submit" action="#{songController.addSong}" />
+				</h:form>
+			</div>
+		</div>
+	</ui:define>
+
+</ui:composition>

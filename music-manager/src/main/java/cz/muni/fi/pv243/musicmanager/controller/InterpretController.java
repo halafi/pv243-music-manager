@@ -50,7 +50,6 @@ public class InterpretController {
 
 	public List<Interpret> getAllInterprets() {
 		try {
-			// return songService.getSongsbyInterpret("Unknown");
 			return interpretService.getAllInterprets();
 		} catch (ServiceException e) {
 			facesContext.addMessage(

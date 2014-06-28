@@ -1,0 +1,77 @@
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="title">
+    Music Manager Test Page
+</ui:define>
+
+	<ui:define name="content">
+		<div class="container">
+			<h2>Song Details</h2>
+			<h:form id="songForm">
+				<h:panelGrid styleClass="table" columns="2">
+
+					<h:panelGroup>
+						<h:outputFormat value="#{newSong.songName}" id="songName" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputLabel for="interpret" value="by" class="details"/>
+						<h:outputFormat value="#{newSong.interpretId}" id="interpret" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputLabel for="playedTimes" value="played" class="details"/>
+						<h:outputFormat value="#{newSong.timesPlayed} times"
+							id="playedTimes" />
+					</h:panelGroup>
+
+					<h:panelGroup>
+						<h:outputLabel for="uploader" value="uploaded by" class="details"/>
+						<h:outputFormat value="#{newSong.uploaderUserName}"
+							id="uploader" />
+					</h:panelGroup>
+				</h:panelGrid>
+				<h:inputHidden value="#{newSong.id}" />
+				<h:inputHidden value="#{newSong.filePath}" />
+				<h:inputHidden value="#{newSong.timesPlayed}" />
+				<h:inputHidden value="#{newSong.uploaderUserName}" />
+
+			</h:form>
+
+
+
+			<h2>Create comment</h2>
+			<div class="well">
+				<h:form id="commentForm">
+					<div class="form-group">
+						<h:outputLabel for="commentText" value="Text" />
+						<h:inputText styleClass="form-control" id="commentText"
+							value="#{newComment.text}" />
+						<h:message for="commentText" styleClass="alert alert-warning" />
+					</div>
+					<h:commandButton styleClass="btn btn-default" value="Save"
+						action="#{commentController.addComment}" />
+				</h:form>
+			</div>
+			<h2>Comments</h2>
+			<h:dataTable value="#{commentController.commentsBySong}"
+				var="comment" styleClass="table">
+				<h:column>
+					<f:facet name="header">Id</f:facet>#{comment.id}</h:column>
+				<h:column>
+					<f:facet name="header">Text</f:facet>#{comment.text}</h:column>
+				<h:column>
+					<f:facet name="header">Author</f:facet>#{comment.authorUserName}</h:column>
+				<h:column>
+					<f:facet name="header">SongId</f:facet>#{comment.songId}</h:column>
+				<h:column>
+					<f:facet name="header">PostTime</f:facet>#{comment.postTime}</h:column>
+			</h:dataTable>
+		</div>
+	</ui:define>
+
+</ui:composition>

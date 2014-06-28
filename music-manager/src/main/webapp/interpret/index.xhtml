@@ -16,8 +16,6 @@
 				<h:dataTable value="#{interpretController.allInterprets}" var="s"
 					styleClass="table">
 					<h:column>
-						<f:facet name="header">Id</f:facet>#{s.id}</h:column>
-					<h:column>
 						<f:facet name="header">Name</f:facet>#{s.name}</h:column>
 					<h:column>
 						<f:facet name="header">Country</f:facet>#{s.country}</h:column>
@@ -45,7 +43,8 @@
 					value=" Remove all Interprets" />
 			</h:form>
 			
-			<h:link outcome="create" value=" Create new Interpret" class="glyphicon glyphicon-plus"/>
+			<h:link outcome="create" value=" Create new Interpret"
+				class="glyphicon glyphicon-plus" />
 		</div>
 	</ui:define>
 

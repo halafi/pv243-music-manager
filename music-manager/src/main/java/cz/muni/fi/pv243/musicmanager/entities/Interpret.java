@@ -122,8 +122,7 @@ public class Interpret implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Interpret [id=" + id + ", name=" + name + ", country="
-				+ country + ", genre=" + genre + "]";
+		return name + ", " + genre;
 	}
 	
 	

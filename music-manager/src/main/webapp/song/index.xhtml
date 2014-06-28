@@ -1,0 +1,64 @@
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="title">
+    Music Manager Song
+</ui:define>
+
+	<ui:define name="content">
+		<div class="container">
+			<h2>Songs</h2>
+			<h:form>
+				<h:dataTable value="#{allSongs}" var="s" styleClass="table">
+					<h:column>
+						<f:facet name="header">Name</f:facet>#{s.songName}</h:column>
+					<h:column>
+						<f:facet name="header">Interpret</f:facet>#{s.interpretId}</h:column>
+					<h:column>
+						<f:facet name="header">Uploader</f:facet>#{s.uploaderUserName}</h:column>
+					<h:column>
+						<f:facet name="header">Times played</f:facet>#{s.timesPlayed}</h:column>
+					<h:column>
+						<f:facet name="header">File</f:facet>#{s.filePath}</h:column>
+					<h:column>
+						<f:facet name="header">Comments</f:facet>#{s.comments}</h:column>
+					<h:column>
+						<f:facet name="header">Details</f:facet>
+						<h:commandLink action="#{songController.details(s.id)}" title="Details">
+							<span class="glyphicon glyphicon-info-sign" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Edit</f:facet>
+						<h:commandLink action="#{songController.edit(s.id)}" title="Edit">
+							<span class="glyphicon glyphicon-pencil" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+
+						<f:facet name="header">Play</f:facet>
+						<h:commandLink action="#{songController.playSong(s.id)}"
+							title="Play">
+							<span class="glyphicon glyphicon-play" />
+						</h:commandLink>
+					</h:column>
+					<h:column>
+						<f:facet name="header">Remove</f:facet>
+						<h:commandLink action="#{songController.removeSong(s.id)}"
+							title="Delete">
+							<span class="glyphicon glyphicon-trash" />
+						</h:commandLink>
+					</h:column>
+				</h:dataTable>
+				<h:commandLink class="glyphicon glyphicon-trash"
+					action="#{songController.removeAllSongs}" value=" Remove all songs" />
+			</h:form>
+			<h:link outcome="create" value=" Upload new song"
+				class="glyphicon glyphicon-plus " />
+		</div>
+	</ui:define>
+
+</ui:composition>
