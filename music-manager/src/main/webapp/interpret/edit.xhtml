@@ -1,0 +1,42 @@
+
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="title">
+    Music Manager Interpret Edit
+</ui:define>
+
+	<ui:define name="content">
+		<div class="container">
+			<h2>Edit Interpret</h2>
+			<div class="well">
+				<h:form id="interpretForm">
+					<h:inputHidden value="#{interpret.id}" />
+					<div class="form-group">
+						<h:outputLabel for="name" value="Interpret name" />
+						<h:inputText styleClass="form-control" id="name"
+							value="#{interpret.name}" />
+					</div>
+					<div class="form-group">
+						<h:outputLabel for="country" value="Country" />
+						<h:inputText styleClass="form-control" id="country"
+							value="#{interpret.country}" />
+					</div>
+					<div class="form-group">
+						<h:selectOneMenu value="#{interpret.genre}" id="genre">
+							<f:selectItems value="#{interpretController.genres}" />
+						</h:selectOneMenu>
+					</div>
+
+					<h:commandButton styleClass="btn btn-default" value="Update"
+						action="#{interpretController.updateInterpret()}" />
+				</h:form>
+			</div>
+
+		</div>
+	</ui:define>
+
+</ui:composition>
