@@ -1,0 +1,57 @@
+
+<ui:composition template="/template.xhtml"
+	 xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+	  
+<ui:define name="title">
+    Music Manager Interpret
+</ui:define>
+
+<ui:define name="content"> 
+<div class="container">	
+		<h2>Interprets</h2>
+		<h:form>
+		<h:dataTable value="#{interpretController.allInterprets}" var="s" styleClass="table">
+			<h:column><f:facet name="header">Id</f:facet>#{s.id}</h:column>
+	   		<h:column><f:facet name="header">Name</f:facet>#{s.name}</h:column>
+	   		<h:column><f:facet name="header">Country</f:facet>#{s.country}</h:column>
+	   		<h:column><f:facet name="header">Genre</f:facet>#{s.genre}</h:column>
+	   		<h:column><f:facet name="header">Remove</f:facet>
+	   			<h:commandLink action="#{songController.removeSong(s.id)}" title="Delete">
+            		<span class="glyphicon glyphicon-trash"/>
+            	</h:commandLink>
+            	<h:commandLink action="#{songController.playSong(s.id)}" title="Play">
+            		<span class="glyphicon glyphicon-play"/>
+            	</h:commandLink>
+            </h:column>
+		</h:dataTable>
+		<h:commandButton styleClass="btn btn-default" action="#{songController.removeAllSongs}" value="Remove all Interprets"/>
+		</h:form>
+		
+     	<h2>Create Interpret</h2>
+     	<div class="well">
+			<h:form id="interpretForm">
+			<div class="form-group">
+	          <h:outputLabel for="name" value="Interpret name"/>
+	          <h:inputText styleClass="form-control" id="name" value="#{interpret.name}"/>
+			</div>
+			<div class="form-group">
+	          <h:outputLabel for="country" value="Country"/>
+	          <h:inputText styleClass="form-control" id="country" value="#{interpret.country}"/>
+			</div>
+			<div class="form-group">
+	            <h:selectOneMenu value="#{interpret.genre}" id="genre">
+                        <f:selectItems value="#{interpretController.genres}"/>
+                 </h:selectOneMenu>
+			</div>
+			
+			<h:commandButton styleClass="btn btn-default" value="Create" action="#{interpretController.addInterpret()}"/>
+			</h:form>
+		</div>
+		
+</div>
+</ui:define>
+
+</ui:composition>
