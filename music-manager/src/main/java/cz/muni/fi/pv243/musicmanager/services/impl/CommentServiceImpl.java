@@ -16,7 +16,6 @@ import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.dao.CommentManager;
 import cz.muni.fi.pv243.musicmanager.entities.Comment;
-import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.ServiceException;
 import cz.muni.fi.pv243.musicmanager.services.CommentService;
 

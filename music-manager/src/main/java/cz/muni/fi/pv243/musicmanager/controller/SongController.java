@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
@@ -20,13 +19,11 @@ import javax.inject.Named;
 import javax.servlet.http.Part;
 
 import org.apache.commons.io.FileUtils;
-import org.jboss.security.ISecurityManagement;
 import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.entities.Comment;
 import cz.muni.fi.pv243.musicmanager.entities.Interpret;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
-import cz.muni.fi.pv243.musicmanager.entities.Interpret.Genre;
 import cz.muni.fi.pv243.musicmanager.exceptions.FileUploadException;
 import cz.muni.fi.pv243.musicmanager.exceptions.ServiceException;
 import cz.muni.fi.pv243.musicmanager.exceptions.SongFileValidationException;

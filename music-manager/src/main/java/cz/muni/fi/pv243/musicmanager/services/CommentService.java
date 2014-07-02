@@ -4,7 +4,6 @@ import java.util.List;
 
 import cz.muni.fi.pv243.musicmanager.entities.Comment;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
-import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.ServiceException;
 
 /**

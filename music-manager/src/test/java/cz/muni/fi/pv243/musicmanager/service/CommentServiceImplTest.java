@@ -3,7 +3,6 @@ package cz.muni.fi.pv243.musicmanager.service;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Set;
 
 import javax.ejb.EJBException;

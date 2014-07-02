@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.transaction.NotSupportedException;
-import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.apache.lucene.search.Query;
@@ -18,7 +16,6 @@ import org.infinispan.query.CacheQuery;
 import org.infinispan.query.Search;
 import org.infinispan.query.SearchManager;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import cz.muni.fi.pv243.musicmanager.dao.CommentManager;
 import cz.muni.fi.pv243.musicmanager.entities.Comment;

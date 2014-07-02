@@ -12,6 +12,7 @@ import javax.ws.rs.Produces;
 import org.infinispan.commons.api.BasicCacheContainer;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
+import org.infinispan.configuration.cache.Index;
 import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
 import org.infinispan.manager.DefaultCacheManager;
@@ -48,7 +49,8 @@ public class CacheContainerProvider {
         																.purgeOnStartup(false)
         																.location(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "data")
         																.async().enabled(true).threadPoolSize(5)
-        																.indexing().enable()
+        																//.indexing().enable()
+        																.indexing().index(Index.ALL)
         															.build();
         	
 

@@ -1,6 +1,5 @@
 package cz.muni.fi.pv243.musicmanager.controller;
 
-
 import javax.annotation.PostConstruct;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
@@ -8,17 +7,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.criteria.CriteriaBuilder.In;
 
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.credential.Password;
-import org.picketlink.idm.credential.UsernamePasswordCredentials;
-import org.picketlink.idm.model.IdentityType;
-import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.entities.User;
 import cz.muni.fi.pv243.musicmanager.services.UserService;
-
 @Model
 public class UserController {
 
@@ -27,9 +21,6 @@ public class UserController {
 	
 	@Inject
 	private UserService userService;
-	
-	@Inject
-	private Logger logger;
 	
 	@Inject
 	private IdentityManager im;

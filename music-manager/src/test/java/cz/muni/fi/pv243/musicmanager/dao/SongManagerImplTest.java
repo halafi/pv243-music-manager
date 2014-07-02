@@ -209,7 +209,7 @@ public class SongManagerImplTest {
     public void getSongTest() {
     	// get with null id
     	try {
-			Song song = songManager.getSong(null);
+			songManager.getSong(null);
 			Assert.fail("Exception not thrown.");
     	} catch (EJBException ex) {
     		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
@@ -342,7 +342,7 @@ public class SongManagerImplTest {
     public void getSongsbyInterpretTest() {
     	// get songs by null interpret
     	try {
-    		List<Song> songs = songManager.getSongsbyInterpret(null);
+    		songManager.getSongsbyInterpret(null);
     		Assert.fail("Exception not thrown.");
     	} catch(EJBException ex) {
     		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
@@ -400,7 +400,7 @@ public class SongManagerImplTest {
     public void searchSongsTest() {
     	// search null fulltext
     	try {
-    		List<Song> songs = songManager.searchSongs(null);
+    		songManager.searchSongs(null);
     		Assert.fail("Exception not thrown.");
     	} catch(EJBException ex) {
     		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {
@@ -456,7 +456,7 @@ public class SongManagerImplTest {
     public void getUserSongsTest() {
     	// get songs by null username
     	try {
-    		List<Song> songs = songManager.getUserSongs(null);
+    		songManager.getUserSongs(null);
     		Assert.fail("Exception not thrown.");
     	} catch(EJBException ex) {
     		if (!(ex.getCausedByException() instanceof IllegalArgumentException)) {

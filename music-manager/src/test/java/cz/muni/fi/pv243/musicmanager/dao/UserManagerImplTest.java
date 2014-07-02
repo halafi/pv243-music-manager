@@ -1,7 +1,6 @@
 package cz.muni.fi.pv243.musicmanager.dao;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -11,27 +10,19 @@ import java.util.List;
 
 import javax.ejb.EJBException;
 import javax.inject.Inject;
-import javax.transaction.UserTransaction;
-import javax.validation.constraints.AssertTrue;
 
-import org.fest.assertions.AssertExtension;
-import org.infinispan.commons.api.BasicCacheContainer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.archive.importer.MavenImporter;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.Assert;
 import org.junit.runner.RunWith;
 
-import cz.muni.fi.pv243.musicmanager.dao.UserManager;
-import cz.muni.fi.pv243.musicmanager.dao.impl.CacheContainerProvider;
-import cz.muni.fi.pv243.musicmanager.dao.impl.UserManagerImpl;
 import cz.muni.fi.pv243.musicmanager.entities.User;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;

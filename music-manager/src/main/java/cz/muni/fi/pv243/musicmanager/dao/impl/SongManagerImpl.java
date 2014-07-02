@@ -21,7 +21,6 @@ import org.infinispan.query.SearchManager;
 import org.slf4j.Logger;
 
 import cz.muni.fi.pv243.musicmanager.dao.SongManager;
-import cz.muni.fi.pv243.musicmanager.entities.Interpret;
 import cz.muni.fi.pv243.musicmanager.entities.Song;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
@@ -248,8 +247,6 @@ public class SongManagerImpl implements SongManager {
 		if (fulltext == null || fulltext.length() < 1) {
 			throw new IllegalArgumentException("Search string is null or empty.");
 		}
-		
-		List<Song> songs = new ArrayList<Song>();
 		
 		songCache = provider.getCacheContainer().getCache(SONG_CACHE_NAME);
 		
