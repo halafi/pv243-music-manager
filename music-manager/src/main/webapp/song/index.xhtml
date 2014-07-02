@@ -24,20 +24,22 @@
 					<h:column>
 						<f:facet name="header">File</f:facet>#{s.filePath}</h:column>
 					<h:column>
-						<f:facet name="header">Comments</f:facet>#{s.comments}</h:column>
-					<h:column>
-						<f:facet name="header">Details</f:facet>
-						<h:commandLink action="#{songController.details(s.id)}" title="Details">
-							<span class="glyphicon glyphicon-info-sign" />
+						<f:facet name="header">Comments</f:facet>
+						<h:commandLink action="#{commentController.displayComments(s.id)}"
+							title="Comments">
+							<span class="glyphicon glyphicon-comment" />
 						</h:commandLink>
 					</h:column>
+
 					<h:column>
 						<f:facet name="header">Edit</f:facet>
 						<h:commandLink action="#{songController.edit(s.id)}" title="Edit">
 							<span class="glyphicon glyphicon-pencil" />
 						</h:commandLink>
 					</h:column>
+
 					<h:column>
+
 
 						<f:facet name="header">Play</f:facet>
 						<h:commandLink action="#{songController.playSong(s.id)}"

@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.transaction.NotSupportedException;
+import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
 import org.apache.lucene.search.Query;
@@ -23,6 +25,7 @@ import cz.muni.fi.pv243.musicmanager.entities.Comment;
 import cz.muni.fi.pv243.musicmanager.exceptions.IllegalEntityException;
 import cz.muni.fi.pv243.musicmanager.exceptions.NonExistingEntityException;
 import cz.muni.fi.pv243.musicmanager.utils.UUIDStringGenerator;
+
 
 /**
  * @author Radek Koubsky
@@ -59,7 +62,7 @@ public class CommentManagerImpl implements CommentManager {
 			userTransaction.begin();
 			commentCache.put(comment.getId(), comment);
 			userTransaction.commit();
-			logger.info("Comment with id: " + comment.getId() + " was inserted to cache store.");
+			logger.info("Comment with id: " + comment.getId() + ", songID" + comment.getSongId() + " was inserted to cache store.");
 		} catch (Exception e) {
 			if(userTransaction != null){
 				try {
@@ -169,6 +172,7 @@ public class CommentManagerImpl implements CommentManager {
 		SearchManager sm = Search.getSearchManager((Cache<String, Object>) commentCache);
 		QueryBuilder queryBuilder = sm.buildQueryBuilderForClass(Comment.class).get();
 		
+		
 		Query q = queryBuilder.keyword().onField("songId").matching(songId).createQuery();
 		logger.debug("Lucene query: " + q);
 		
@@ -181,5 +185,7 @@ public class CommentManagerImpl implements CommentManager {
 	       }
 	       return comments;
 	}
+
+
 
 }

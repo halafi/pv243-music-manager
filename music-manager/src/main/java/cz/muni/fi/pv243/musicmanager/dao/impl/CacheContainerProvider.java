@@ -10,20 +10,12 @@ import javax.inject.Inject;
 import javax.ws.rs.Produces;
 
 import org.infinispan.commons.api.BasicCacheContainer;
-import org.infinispan.configuration.cache.AsyncStoreConfigurationBuilder;
-import org.infinispan.configuration.cache.CacheMode;
 import org.infinispan.configuration.cache.Configuration;
 import org.infinispan.configuration.cache.ConfigurationBuilder;
-import org.infinispan.configuration.cache.SingleFileStoreConfigurationBuilder;
 import org.infinispan.configuration.global.GlobalConfiguration;
 import org.infinispan.configuration.global.GlobalConfigurationBuilder;
-import org.infinispan.eviction.EvictionStrategy;
 import org.infinispan.manager.DefaultCacheManager;
-import org.infinispan.persistence.leveldb.configuration.LevelDBStoreConfigurationBuilder;
-import org.infinispan.transaction.LockingMode;
 import org.infinispan.transaction.TransactionMode;
-import org.infinispan.transaction.lookup.GenericTransactionManagerLookup;
-import org.infinispan.util.concurrent.IsolationLevel;
 import org.slf4j.Logger;
 
 @ApplicationScoped
@@ -55,10 +47,8 @@ public class CacheContainerProvider {
         																.ignoreModifications(false)
         																.purgeOnStartup(false)
         																.location(System.getProperty("user.home") + File.separator + "music-manager" + File.separator + "data")
-        																//.location("C:\\music-manager" + File.separator + "data")
         																.async().enabled(true).threadPoolSize(5)
-        																	//TODO: find non-depricated equivalent
-        																.indexing().enable().addProperty("default.directory_provider", "ram")
+        																.indexing().enable()
         															.build();
         	
 

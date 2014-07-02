@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
+import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Model;
 import javax.enterprise.inject.Produces;
 import javax.faces.application.FacesMessage;
@@ -66,6 +67,8 @@ public class SongController {
 	@PostConstruct
 	public void initSong() {
 		newSong = new Song();
+		//delete
+		//newSong.setId("46c7bbd9-4b70-4a1c-b655-17e4c4501ba8");
 		newSong.setTimesPlayed(0);
 		newSong.setComments(new ArrayList<Comment>());
 		newSong.setInterpretId("Unknown");
@@ -147,7 +150,9 @@ public class SongController {
 		}
 		return "";
 	}
-
+//	public String getNewSongId(){
+//		return newSong.getId();
+//	}
 	public void playSong(String id) {
 		try {
 			Song song = songService.getSong(id);

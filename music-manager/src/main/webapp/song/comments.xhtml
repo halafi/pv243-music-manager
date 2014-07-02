@@ -1,0 +1,78 @@
+<ui:composition template="/template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+	
+	<!-- <f:event listener="#{commentController.initEditPage()}" type="preRenderView" />
+	 -->
+ 
+
+	<ui:define name="title">
+    Music Manager Comments
+</ui:define>
+
+	<ui:define name="content">
+		<div class="container">
+			
+			 
+			<h2>Add comment</h2>
+			<div class="well">
+				<h:form id="addCommentForm">
+					<h:inputHidden value="#{editSong.id}" />
+					<div class="form-group">
+						<h:outputLabel for="commentText" value="Text" />
+						<h:inputText styleClass="form-control" id="commentText"
+							value="#{newComment.text}" />
+						<h:message for="commentText" styleClass="alert alert-warning" />
+					</div>
+					<h:commandButton styleClass="btn btn-default" value="Save"
+						action="#{commentController.addComment(editSong.id)}" />
+				</h:form>
+			</div>
+
+			<h2>Comments</h2>
+			<h:form id="commentForm">
+ 			<h:inputHidden value="#{editSong.id}" />
+ 
+			<h:dataTable
+				value="#{commentController.commentsBySong}"
+				var="comment" styleClass="table">
+				<h:column>
+					<f:facet name="header">Id</f:facet>#{comment.id}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Text</f:facet>#{comment.text}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Author</f:facet>#{comment.authorUserName}
+				</h:column>
+				<h:column>
+					<f:facet name="header">SongId</f:facet>#{comment.songId}
+				</h:column>
+				<h:column>
+					<f:facet name="header">PostTime</f:facet>#{comment.postTime}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Remove</f:facet>
+					<!-- -->  
+						<h:commandLink
+							action="#{commentController.removeComment(comment.id)}"
+							title="Remove">
+							<span class="glyphicon glyphicon-trash" />
+							
+						</h:commandLink>
+<!-- 						
+					<h:link value="Edit/Remove" outcome="edit_comment">
+						<f:param name="comment_id" value="#{comment.id}" />
+						<span class="glyphicon glyphicon-edit" />
+					</h:link>
+-->
+				</h:column>
+
+			</h:dataTable>
+			</h:form>
+		</div>
+	</ui:define>
+
+</ui:composition>
