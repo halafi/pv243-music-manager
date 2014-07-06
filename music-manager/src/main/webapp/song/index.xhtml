@@ -40,8 +40,13 @@
 
 					<h:column>
 
-
 						<f:facet name="header">Play</f:facet>
+
+						<audio controls="controls">
+
+							<source src="#{request.contextPath}/songs/#{songController.songName(s.filePath)}" type="audio/mpeg" />
+							Your browser does not support the audio element.
+						</audio>
 						<h:commandLink action="#{songController.playSong(s.id)}"
 							title="Play">
 							<span class="glyphicon glyphicon-play" />

@@ -64,8 +64,8 @@ public class SongController {
 	@PostConstruct
 	public void initSong() {
 		newSong = new Song();
-		//delete
-		//newSong.setId("46c7bbd9-4b70-4a1c-b655-17e4c4501ba8");
+		// delete
+		// newSong.setId("46c7bbd9-4b70-4a1c-b655-17e4c4501ba8");
 		newSong.setTimesPlayed(0);
 		newSong.setComments(new ArrayList<Comment>());
 		newSong.setInterpretId("Unknown");
@@ -147,9 +147,10 @@ public class SongController {
 		}
 		return "";
 	}
-//	public String getNewSongId(){
-//		return newSong.getId();
-//	}
+
+	// public String getNewSongId(){
+	// return newSong.getId();
+	// }
 	public void playSong(String id) {
 		try {
 			Song song = songService.getSong(id);
@@ -290,6 +291,10 @@ public class SongController {
 							.getString("song.get.fail.service"), null));
 		}
 		return "edit";
+	}
+	public String songName(String path){
+		File file = new File(path);
+		return file.getName();
 	}
 
 }
