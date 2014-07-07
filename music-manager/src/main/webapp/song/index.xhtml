@@ -11,7 +11,7 @@
 	<ui:define name="content">
 		<div class="container">
 			<h2>Songs</h2>
-			<h:form>
+			<h:form id="songForm">
 				<h:dataTable value="#{allSongs}" var="s" styleClass="table">
 					<h:column>
 						<f:facet name="header">Name</f:facet>#{s.songName}</h:column>
@@ -38,19 +38,25 @@
 						</h:commandLink>
 					</h:column>
 
-					<h:column>
+					<h:column >
 
 						<f:facet name="header">Play</f:facet>
 
-						<audio controls="controls">
+						<audio controls="controls"
+							onclick="document.getElementById('songForm:play#{s.id}').click();">
 
-							<source src="#{request.contextPath}/songs/#{songController.songName(s.filePath)}" type="audio/mpeg" />
+							<source
+								src="#{request.contextPath}/songs/#{songController.songName(s.filePath)}"
+								type="audio/mpeg" />
 							Your browser does not support the audio element.
+
 						</audio>
-						<h:commandLink action="#{songController.playSong(s.id)}"
-							title="Play">
-							<span class="glyphicon glyphicon-play" />
-						</h:commandLink>
+
+						<h:commandButton  id="play#{s.id}"
+							action="#{songController.playSong(s.id)}" value="playSong">
+							<f:ajax render="none" />
+						</h:commandButton>
+
 					</h:column>
 					<h:column>
 						<f:facet name="header">Remove</f:facet>
@@ -62,6 +68,7 @@
 				</h:dataTable>
 				<h:commandLink class="glyphicon glyphicon-trash"
 					action="#{songController.removeAllSongs}" value=" Remove all songs" />
+
 			</h:form>
 			<h:link outcome="create" value=" Upload new song"
 				class="glyphicon glyphicon-plus " />
