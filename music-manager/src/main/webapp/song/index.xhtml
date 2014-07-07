@@ -11,8 +11,8 @@
 	<ui:define name="content">
 		<div class="container">
 			<h2>Songs</h2>
-			<h:form id="songForm">
-				<h:dataTable value="#{allSongs}" var="s" styleClass="table">
+			<h:form id="songForm" >
+				<h:dataTable value="#{allSongs}" var="s" styleClass="table" id="songTable">
 					<h:column>
 						<f:facet name="header">Name</f:facet>#{s.songName}</h:column>
 					<h:column>
@@ -43,7 +43,7 @@
 						<f:facet name="header">Play</f:facet>
 
 						<audio controls="controls"
-							onclick="document.getElementById('songForm:play#{s.id}').click();">
+  							onclick="$(this).siblings().click()">
 
 							<source
 								src="#{request.contextPath}/songs/#{songController.songName(s.filePath)}"
@@ -52,7 +52,7 @@
 
 						</audio>
 
-						<h:commandButton  id="play#{s.id}"
+						<h:commandButton  class="hidden"
 							action="#{songController.playSong(s.id)}" value="playSong">
 							<f:ajax render="none" />
 						</h:commandButton>
